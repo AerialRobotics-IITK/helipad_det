@@ -5,12 +5,8 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
-cv::Mat img, blur, canny, gray, result;
-cv::Mat src, src_gray;
-cv::Mat dst, detected_edges;
 int edgeThresh = 1;
-int lowThreshold=25;
-int const max_lowThreshold = 100;
+int lowThreshold=100;
 int ratio = 3;
 int kernel_size = 3;
 
@@ -21,6 +17,8 @@ class ImageConverter{
 	image_transport::Subscriber image_sub;
 	image_transport::Publisher image_pub;
 	ros::Publisher obj_pub;
+
+	cv::Mat img, preprocess_result;
 
 	public:
 	  ImageConverter()
@@ -47,20 +45,24 @@ class ImageConverter{
 	    }
 
 	    img=cv_ptr->image;
-	    cv::cvtColor(img,gray,CV_BGR2GRAY);
-	    cv::GaussianBlur(gray, blur, cv::Size(5,5), 0, 0);
-	    cv::Canny(blur, canny, lowThreshold, lowThreshold*ratio, kernel_size);
-	
-	    cv::cvtColor(canny,result,CV_GRAY2BGR);
+	    
+	    preprocess_result=Preprocess(img, edgeThresh, lowThreshold, ratio, kernel_size)
+	    
+	    std::vector<std::vector<cv::Point> > ListContours;
+	    std::vector<cv::Vec4i> hierarchy;
+	    cv::findContours(preprocess_result,ListContours,hierarchy,CV_RETR_LIST,CV_CHAIN_APPROX_NONE,0);
+
+	    
+
 	    cv_bridge::CvImage Can_img;
-     	Can_img.header.stamp = ros::Time::now();
-     	Can_img.encoding = sensor_msgs::image_encodings::BGR8;
-     	Can_img.image = result;
-     	image_pub.publish(Can_img.toImageMsg());
-
-
+ 		Can_img.header.stamp = ros::Time::now();
+ 		Can_img.encoding = sensor_msgs::image_encodings::BGR8;
+ 		Can_img.image = result;
+ 		image_pub.publish(Can_img.toImageMsg());
       return;
   	}
+
+
 };
 int main(int argc, char** argv)
 {
