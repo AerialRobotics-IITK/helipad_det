@@ -1,3 +1,5 @@
+#include <opencv2/opencv.hpp>
+
 cv::Mat Preprocess(cv::Mat img,int canny_edgeThres, int canny_lowThreshold, int canny_ratio, int canny_kernel_size){
     cv::Mat gray, blur, canny, result;
 
