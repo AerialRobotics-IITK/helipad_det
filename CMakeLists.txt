@@ -24,7 +24,7 @@ include_directories(
   ${OpenCV_INCLUDE_DIRS}
 )
 
-add_executable(hdetect src/detect.cpp)
+add_executable(hdetect src/hdetect.cpp)
 target_link_libraries(hdetect ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 
 ## System dependencies are found with CMake's conventions
