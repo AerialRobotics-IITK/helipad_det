@@ -51,7 +51,11 @@ class ImageConverter{
 	    std::vector<std::vector<cv::Point> > ListContours;
 	    std::vector<cv::Vec4i> hierarchy;
 	    cv::findContours(preprocess_result,ListContours,hierarchy,CV_RETR_LIST,CV_CHAIN_APPROX_NONE,0);
-
+		  for(unsigned int i = 0; i< ListContours.size();i++){
+        n = std::round(cv::arcLength(ListContours[i],closed)/(26*3));
+        //PointToLineDistance();  TODO
+        //update ListDistances; 
+    }
 	    
 
 	    cv_bridge::CvImage Can_img;
