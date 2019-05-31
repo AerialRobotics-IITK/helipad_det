@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>hdetect</name>
+  <name>helipad_det</name>
   <version>0.0.0</version>
   <description>The hdetect package</description>
 
