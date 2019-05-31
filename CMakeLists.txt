@@ -2,27 +2,29 @@ cmake_minimum_required(VERSION 2.8.3)
 project(heli_det)
 
 find_package(catkin_simple REQUIRED)
+
 catkin_simple(ALL_DEPS_REQUIRED)
 
-add_definitions(-std=c++11)
+#add_definitions(-std=c++11)
 
 #############
 # LIBRARIES #
 #############
 cs_add_library(${PROJECT_NAME}
-  ##src/trajectory_sampler.cpp
+  src/detect.cpp
 )
 
 ############
 # BINARIES #
 ############
-cs_add_executable(##local_planner_node
-  ##src/local_planner_node.cpp
+cs_add_executable(detect
+  src/detect.cpp
 )
-target_link_libraries(##local_planner_node ${PROJECT_NAME})
+target_link_libraries(detect ${PROJECT_NAME})
 
 ##########
 # EXPORT #
 ##########
 cs_install()
+
 cs_export()
