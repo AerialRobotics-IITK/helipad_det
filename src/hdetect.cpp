@@ -7,7 +7,7 @@
 #include <helipad_det/Preprocess.h>
 
 	int lowThreshold;
-  int ratio;
+  	int ratio;
 	int kernel_size;
 
 class ImageConverter{
