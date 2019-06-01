@@ -6,7 +6,6 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <helipad_det/Preprocess.h>
 
-int edgeThresh = 1;
 int lowThreshold=100;
 int ratio = 3;
 int kernel_size = 3;
@@ -19,7 +18,7 @@ class ImageConverter{
 	image_transport::Publisher image_pub;
 	ros::Publisher obj_pub;
 
-	cv::Mat img, preprocess_result;
+	cv::Mat img, preprocess_result, result;
 
 	public:
 	  ImageConverter()
@@ -47,18 +46,18 @@ class ImageConverter{
 
 	    img=cv_ptr->image;
 	    
-	    preprocess_result=Preprocess(img, edgeThresh, lowThreshold, ratio, kernel_size);
+	    preprocess_result=Preprocess(img, lowThreshold, ratio, kernel_size);
 	    
 	    std::vector<std::vector<cv::Point> > ListContours;
 	    std::vector<cv::Vec4i> hierarchy;
 	    cv::findContours(preprocess_result,ListContours,hierarchy,CV_RETR_LIST,CV_CHAIN_APPROX_NONE);
 
 	    
-
+	    cv::cvtColor(preprocess_result,result,CV_GRAY2BGR);
 	    cv_bridge::CvImage Can_img;
  		Can_img.header.stamp = ros::Time::now();
  		Can_img.encoding = sensor_msgs::image_encodings::BGR8;
- 		Can_img.image = preprocess_result;
+ 		Can_img.image = result;
  		image_pub.publish(Can_img.toImageMsg());
       return;
   	}
