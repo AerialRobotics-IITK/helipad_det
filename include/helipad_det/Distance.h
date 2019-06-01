@@ -11,7 +11,7 @@ double baseLength(cv::Point line_end,cv::Point line_start){
     return cv::norm(line_end - line_start);
 }
 
-void PointToLineDistance(std::vector<cv::Point> contour, int n, std::vector<double>& distances){
+void PointToLineDistance(std::vector<cv::Point>& contour, std::vector<double>& distances, int n){
     for(unsigned int i=0; i< contour.size();i++){
         if(i-n>=0 && i+n<contour.size())
             distances[i] = cross_product(contour[i],contour[i-n],contour[i+n])/baseLength(contour[i+n],contour[i-n]);
