@@ -7,7 +7,7 @@
 #include <helipad_det/Preprocess.h>
 
 	int lowThreshold;
-  	int ratio;
+  int ratio;
 	int kernel_size;
 
 class ImageConverter{
@@ -51,24 +51,21 @@ class ImageConverter{
 	    
 	    std::vector<std::vector<cv::Point> > ListContours;
 	    std::vector<cv::Vec4i> hierarchy;
-<<<<<<< HEAD:src/detect.cpp
-	    cv::findContours(preprocess_result,ListContours,hierarchy,CV_RETR_LIST,CV_CHAIN_APPROX_NONE,0);
-		  for(unsigned int i = 0; i< ListContours.size();i++){
-        n = std::round(cv::arcLength(ListContours[i],closed)/(26*3));
-        //PointToLineDistance();  TODO
-        //update ListDistances; 
-    }
-=======
-	    cv::findContours(preprocess_result,ListContours,hierarchy,CV_RETR_LIST,CV_CHAIN_APPROX_NONE);
 
->>>>>>> 62b49080a09f5df4832c52a65220e154938e0117:src/hdetect.cpp
+	    cv::findContours(preprocess_result,ListContours,hierarchy,CV_RETR_LIST,CV_CHAIN_APPROX_NONE);
+			for(unsigned int i = 0; i< ListContours.size();i++){
+					n = round(cv::arcLength(ListContours[i],closed)/(26*3));
+					//PointToLineDistance() TODO
+					//update ListDistance TODO
+
+			}
 	    
 	    cv::cvtColor(preprocess_result,result,CV_GRAY2BGR);
 	    cv_bridge::CvImage Can_img;
- 		Can_img.header.stamp = ros::Time::now();
- 		Can_img.encoding = sensor_msgs::image_encodings::BGR8;
- 		Can_img.image = result;
- 		image_pub.publish(Can_img.toImageMsg());
+ 			Can_img.header.stamp = ros::Time::now();
+ 			Can_img.encoding = sensor_msgs::image_encodings::BGR8;
+ 			Can_img.image = result;
+ 			image_pub.publish(Can_img.toImageMsg());
       return;
   	}
 
