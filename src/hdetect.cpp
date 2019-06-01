@@ -5,10 +5,11 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <helipad_det/Preprocess.h>
+#include <helipad_det/Distance.h>
 
-	int lowThreshold;
-  int ratio;
-	int kernel_size;
+int lowThreshold;
+int ratio;
+int kernel_size;
 
 class ImageConverter{
 	ros::NodeHandle nh;
@@ -51,11 +52,11 @@ class ImageConverter{
 	    
 	    std::vector<std::vector<cv::Point> > ListContours;
 	    std::vector<cv::Vec4i> hierarchy;
-
+			int n;
 	    cv::findContours(preprocess_result,ListContours,hierarchy,CV_RETR_LIST,CV_CHAIN_APPROX_NONE);
 			for(unsigned int i = 0; i< ListContours.size();i++){
-					n = round(cv::arcLength(ListContours[i],closed)/(26*3));
-					//PointToLineDistance() TODO
+					n = round(cv::arcLength(ListContours, true)/(26*3));
+					//PointToLineDistance() todo
 					//update ListDistance TODO
 
 			}
