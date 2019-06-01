@@ -5,6 +5,5 @@ cv::Mat Preprocess(cv::Mat img,int canny_edgeThres, int canny_lowThreshold, int 
     cv::GaussianBlur(gray, blur, cv::Size(5,5), 0, 0);
     cv::Canny(blur, canny, canny_lowThreshold, canny_lowThreshold*canny_ratio, canny_kernel_size);
 
-    cv::cvtColor(canny,result,CV_GRAY2BGR);
     return result;
 }
