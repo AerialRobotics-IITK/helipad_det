@@ -4,6 +4,7 @@
 #include <sensor_msgs/image_encodings.h>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include <helipad_det/Preprocess.h>
 
 int edgeThresh = 1;
 int lowThreshold=100;
@@ -46,18 +47,18 @@ class ImageConverter{
 
 	    img=cv_ptr->image;
 	    
-	    preprocess_result=Preprocess(img, edgeThresh, lowThreshold, ratio, kernel_size)
+	    preprocess_result=Preprocess(img, edgeThresh, lowThreshold, ratio, kernel_size);
 	    
 	    std::vector<std::vector<cv::Point> > ListContours;
 	    std::vector<cv::Vec4i> hierarchy;
-	    cv::findContours(preprocess_result,ListContours,hierarchy,CV_RETR_LIST,CV_CHAIN_APPROX_NONE,0);
+	    cv::findContours(preprocess_result,ListContours,hierarchy,CV_RETR_LIST,CV_CHAIN_APPROX_NONE);
 
 	    
 
 	    cv_bridge::CvImage Can_img;
  		Can_img.header.stamp = ros::Time::now();
  		Can_img.encoding = sensor_msgs::image_encodings::BGR8;
- 		Can_img.image = result;
+ 		Can_img.image = preprocess_result;
  		image_pub.publish(Can_img.toImageMsg());
       return;
   	}
