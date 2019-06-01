@@ -4,12 +4,11 @@
 #include <sensor_msgs/image_encodings.h>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include <helipad_det/Preprocess.h>
 
-int edgeThresh = 1;
-int lowThreshold=100;
-int ratio = 3;
-int kernel_size = 3;
-
+	int lowThreshold;
+  	int ratio;
+	int kernel_size;
 
 class ImageConverter{
 	ros::NodeHandle nh;
@@ -17,8 +16,7 @@ class ImageConverter{
 	image_transport::Subscriber image_sub;
 	image_transport::Publisher image_pub;
 	ros::Publisher obj_pub;
-
-	cv::Mat img, preprocess_result;
+	cv::Mat img, preprocess_result, result;
 
 	public:
 	  ImageConverter()
@@ -28,6 +26,9 @@ class ImageConverter{
 	    image_sub = it_.subscribe("usb_cam/image_raw", 1,
 	      &ImageConverter::imageCb, this);
 	    image_pub = it_.advertise("threshold_image", 1);
+			nh.getParam("/hdetect/low_threshold", lowThreshold);
+			nh.getParam("/hdetect/ratio", ratio);
+			nh.getParam("/hdetect/kernel_size", kernel_size);
 	  }
 
 	  ~ImageConverter(){}
@@ -46,18 +47,23 @@ class ImageConverter{
 
 	    img=cv_ptr->image;
 	    
-	    preprocess_result=Preprocess(img, edgeThresh, lowThreshold, ratio, kernel_size)
+	    preprocess_result=Preprocess(img, lowThreshold, ratio, kernel_size);
 	    
 	    std::vector<std::vector<cv::Point> > ListContours;
 	    std::vector<cv::Vec4i> hierarchy;
+<<<<<<< HEAD:src/detect.cpp
 	    cv::findContours(preprocess_result,ListContours,hierarchy,CV_RETR_LIST,CV_CHAIN_APPROX_NONE,0);
 		  for(unsigned int i = 0; i< ListContours.size();i++){
         n = std::round(cv::arcLength(ListContours[i],closed)/(26*3));
         //PointToLineDistance();  TODO
         //update ListDistances; 
     }
-	    
+=======
+	    cv::findContours(preprocess_result,ListContours,hierarchy,CV_RETR_LIST,CV_CHAIN_APPROX_NONE);
 
+>>>>>>> 62b49080a09f5df4832c52a65220e154938e0117:src/hdetect.cpp
+	    
+	    cv::cvtColor(preprocess_result,result,CV_GRAY2BGR);
 	    cv_bridge::CvImage Can_img;
  		Can_img.header.stamp = ros::Time::now();
  		Can_img.encoding = sensor_msgs::image_encodings::BGR8;
