@@ -24,8 +24,9 @@ int main(int argc, char** argv)
     for(i=0;i<ListContours.size();i++)
     {
         // std::vector<double> temp(ListDistance.at(i).size());
-        int n = round(ListContours.at(i).size()/(26*3));
-        pointToLineDistance(ListContours.at(i), ListDistance.at(i), n);
+        pointToLineDistance(ListContours.at(i), ListDistance.at(i));
         // smooth(ListDistance.at(i), temp);
+        for(int j=0;j<ListDistance.at(i).size();j++)
+            std::cout << ListDistance.at(i).at(j) << std::endl;
     }
 }

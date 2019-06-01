@@ -58,7 +58,7 @@ class ImageConverter{
 	    cv::findContours(preprocess_result,ListContours,hierarchy,CV_RETR_LIST,CV_CHAIN_APPROX_NONE);
 			for(unsigned int i = 0; i< ListContours.size();i++){
 					n = round(cv::arcLength(ListContours.at(i), true)/(26*3));
-					pointToLineDistance(ListContours.at(i), ListDistance[i], n);
+					pointToLineDistance(ListContours.at(i), ListDistance[i]);
 			}
 	    
 	    cv::cvtColor(preprocess_result,result,CV_GRAY2BGR);
