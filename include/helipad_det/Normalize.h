@@ -1,20 +1,28 @@
+#include <ros/ros.h>
 #include <opencv2/opencv.hpp>
 #include <math.h>
 #include <iostream>
 
 void smooth(std::vector<double>& input, std::vector<double>& output){
+    ROS_ASSERT(input.size()==output.size());
     int i;
+    for(int i=0;i<output.size();i++)
+        output[i]=0;
+
     if(input[0]>input[1])
         output[0]=input[0];
+
     if(input[input.size()-1]>input[input.size()-2])
         output[input.size()-1]=input[input.size()-1];
+
     if(output[0]!=0 && output[input.size()-1]!=0)
     {
         if(output[0]>output[input.size()-1])
             output[input.size()-1]=0;
         else
-            output[0]=0;    
+            output[0]=0;        
     }
+
     for(i=1;i<input.size()-1;i++)
     {
         if(input[i]>input[i+1] && input[i]>input[i-1])

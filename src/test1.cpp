@@ -7,11 +7,11 @@
 int main(int argc, char** argv)
 {
     ros::init(argc, argv, "test1");
-    // ros::NodeHandle param_get("~");
+    ros::NodeHandle param_get("~");
     int canny_lowThres=50, ratio=3, kernel_size=3, i;
-    // param_get.getParam("low_threshold", canny_lowThres);
-    // param_get.getParam("ratio", ratio);
-    // param_get.getParam("kernel_size", kernel_size);
+    param_get.getParam("low_threshold", canny_lowThres);
+    param_get.getParam("ratio", ratio);
+    param_get.getParam("kernel_size", kernel_size);
     cv::Mat img = cv::imread("etc/img.png");
     cv::imshow("Img", img);
     cv::Mat prepro_img = Preprocess(img, canny_lowThres, ratio, kernel_size);
@@ -23,10 +23,11 @@ int main(int argc, char** argv)
 	std::vector<std::vector<double> > ListDistance(ListContours.size());
     for(i=0;i<ListContours.size();i++)
     {
-        // std::vector<double> temp(ListDistance.at(i).size());
         pointToLineDistance(ListContours.at(i), ListDistance.at(i));
-        // smooth(ListDistance.at(i), temp);
-        for(int j=0;j<ListDistance.at(i).size();j++)
-            std::cout << ListDistance.at(i).at(j) << std::endl;
+        std::vector<double> temp(ListDistance.at(i).size());
+        smooth(ListDistance.at(i), temp);
+        for(int j=0;j<temp.size();j++)
+            std::cout << temp.at(j) << std::endl;
+        std::cout << std::endl << std::endl;
     }
 }
