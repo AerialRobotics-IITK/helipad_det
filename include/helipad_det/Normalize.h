@@ -2,7 +2,7 @@
 #include <math.h>
 #include <iostream>
 
-void smooth(std::vector<double> input, std::vector<double>& output){
+void smooth(std::vector<double>& input, std::vector<double>& output){
     int i;
     if(input[0]>input[1])
         output[0]=input[0];
@@ -32,4 +32,5 @@ void normalize(std::vector<double>& input, std::vector<double>& output, int n){
             output[i]=3.1416;
         else
             output[i]=asin((2*input[i]*sqrt(n*n-input[i]*input[i]))/(n*n));
+    }
 }

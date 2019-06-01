@@ -53,14 +53,12 @@ class ImageConverter{
 	    std::vector<std::vector<cv::Point> > ListContours;
 	    std::vector<std::vector<double> > ListDistance;
 			std::vector<cv::Vec4i> hierarchy;
-	
+
 			int n;
 	    cv::findContours(preprocess_result,ListContours,hierarchy,CV_RETR_LIST,CV_CHAIN_APPROX_NONE);
 			for(unsigned int i = 0; i< ListContours.size();i++){
-					n = round(cv::arcLength(ListContours, true)/(26*3));
-					PointToLineDistance(ListContours[i],n,ListDistance[i]);
-					
-
+					n = round(cv::arcLength(ListContours.at(i), true)/(26*3));
+					pointToLineDistance(ListContours.at(i), ListDistance[i], n);
 			}
 	    
 	    cv::cvtColor(preprocess_result,result,CV_GRAY2BGR);

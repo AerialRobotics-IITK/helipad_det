@@ -7,6 +7,8 @@ project(helipad_det)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
+find_package(OpenCV REQUIRED)
+
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   sensor_msgs
@@ -26,6 +28,9 @@ include_directories(
 
 add_executable(hdetect src/hdetect.cpp)
 target_link_libraries(hdetect ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+
+add_executable(test1 src/test1.cpp)
+target_link_libraries(test1 ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
