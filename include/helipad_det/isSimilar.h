@@ -13,7 +13,7 @@ int isSimilar(std::vector<float> ListSignatures){
 			int ZeroLength=0;
 			int Index = i;
 			while (ListSignatures.at(Index+ZeroLength)==0) ZeroLength++;
-			if ((ZeroLength < (5.1)*ListSignaturesSize/26) && (ZeroLength > (4.9)*ListSignaturesSize/26)){
+			if (abs(ZeroLength-a*ListSignaturesSize) > (tolerance*ListSignaturesSize)){
 				StartIndex=i;
 				break;
 			} 
