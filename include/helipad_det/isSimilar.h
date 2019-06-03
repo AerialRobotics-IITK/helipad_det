@@ -1,8 +1,8 @@
-int isSimilar(std::vector<float> ListSignatures){
+int isSimilar(std::vector<double>& ListSignatures){
 	
 	
-	float a = 0.19, b = 0.04, c = 0.08, d = 0.08;
-	float tolerance=0.05;
+	double a = 0.19, b = 0.04, c = 0.08, d = 0.08;
+	double tolerance=0.05;
 	int ListSignaturesSize = ListSignatures.size();
 
 	int StartIndex=-1;
@@ -13,7 +13,7 @@ int isSimilar(std::vector<float> ListSignatures){
 			int ZeroLength=0;
 			int Index = i;
 			while (ListSignatures.at(Index+ZeroLength)==0) ZeroLength++;
-			if (abs(ZeroLength-a*ListSignaturesSize) > (tolerance*ListSignaturesSize)){
+			if (abs(ZeroLength-a*ListSignaturesSize) < (tolerance*ListSignaturesSize)){
 				StartIndex=i;
 				break;
 			} 
@@ -22,14 +22,14 @@ int isSimilar(std::vector<float> ListSignatures){
 
 	if (StartIndex==-1) return 0;
 
-	std::vector<float> UpdatedListSignatures;
+	std::vector<double> UpdatedListSignatures(100);
 
 	int Segments[12];
 	int CountSegments=0;
-
 	for (int i=StartIndex;i<ListSignaturesSize;i++) UpdatedListSignatures.push_back(ListSignatures.at(i));
 	for (int i=0;i<StartIndex;i++) UpdatedListSignatures.push_back(ListSignatures.at(i));
-
+	std::cout << "GEY" << std::endl;
+	graph(UpdatedListSignatures, "Updated Graph");
 	for (int i=0;i<ListSignaturesSize;i++){
 		if (UpdatedListSignatures.at(i)==0) continue;
 		
@@ -40,7 +40,7 @@ int isSimilar(std::vector<float> ListSignatures){
 		Segments[CountSegments]=Length;
 		CountSegments++;
 	}
-
+	std::cout << "GEY" <<std::endl;
 	if (CountSegments < 12) return 0;
 
 
