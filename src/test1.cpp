@@ -12,7 +12,7 @@ int main(int argc, char** argv)
     param_get.getParam("/helipad_det/low_threshold", canny_lowThres);
     param_get.getParam("/helipad_det/ratio", ratio);
     param_get.getParam("/helipad_det/kernel_size", kernel_size);
-    cv::Mat img = cv::imread("etc/Refined H.jpg");
+    cv::Mat img = cv::imread("/home/tanay/catkin_ws/src/helipad_det/etc/Refined H.png");
     ROS_ASSERT(img.empty()!=true);
     // cv::imshow("img", img);
     cv::Mat prepro_img = Preprocess(img, canny_lowThres, ratio, kernel_size);
@@ -31,10 +31,10 @@ int main(int argc, char** argv)
         std::vector<double> temp(ListDistance.at(i).size());
         smooth(ListDistance.at(i), temp);
         graph(temp, "Refined Graph");
-        // if(isSimilar(temp)==1)
-        // {
-        //     std::cout << std::endl << "CHAAP-ED" << std::endl;
-        // }
+        if(isSimilar(temp)==1)
+        {
+            std::cout << "CHAAP-ED" << std::endl;
+        }
         cv::drawContours(img_tmp, ListContours, i, cv::Scalar(255, 0, 255));
         Retrace(temp, ListContours.at(i), img_tmp);
         cv::imshow("contours", img_tmp);

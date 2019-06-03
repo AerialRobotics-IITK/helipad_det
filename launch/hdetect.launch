@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-    <include file="$(find usb_cam)/launch/usb_cam-test.launch" />
-    <node pkg="helipad_det" type="hdetect" name="hdetect">
+    <!--<include file="$(find usb_cam)/launch/usb_cam-test.launch" />-->
+    <node pkg="helipad_det" type="test1" name="test1" output="screen">
         <rosparam command="load" file="$(find helipad_det)/cfg/canny_params.yaml"/>
     </node>
 </launch>
