@@ -41,19 +41,21 @@ int isSimilar(std::vector<float> ListSignatures){
 		CountSegments++;
 	}
 
+	if (CountSegments < 12) return 0;
 
-	if (abs(Segments[0]-(0.19*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
-	if (abs(Segments[1]-(0.04*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
-	if (abs(Segments[2]-(0.08*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
-	if (abs(Segments[3]-(0.08*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
-	if (abs(Segments[4]-(0.08*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
-	if (abs(Segments[5]-(0.04*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
-	if (abs(Segments[6]-(0.19*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
-	if (abs(Segments[7]-(0.04*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
-	if (abs(Segments[8]-(0.08*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
-	if (abs(Segments[9]-(0.08*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
-	if (abs(Segments[10]-(0.08*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
-	if (abs(Segments[11]-(0.04*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
+
+	if (abs(Segments[0]-(a*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
+	if (abs(Segments[1]-(b*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
+	if (abs(Segments[2]-(c*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
+	if (abs(Segments[3]-(d*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
+	if (abs(Segments[4]-(c*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
+	if (abs(Segments[5]-(b*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
+	if (abs(Segments[6]-(a*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
+	if (abs(Segments[7]-(b*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
+	if (abs(Segments[8]-(c*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
+	if (abs(Segments[9]-(d*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
+	if (abs(Segments[10]-(c*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
+	if (abs(Segments[11]-(b*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
 
 	return 1;
 
