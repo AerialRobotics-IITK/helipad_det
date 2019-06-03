@@ -1,9 +1,7 @@
 #include <ros/ros.h>
 #include <helipad_det/Preprocess.h>
-#include <helipad_det/Distance.h>
-#include <helipad_det/Normalize.h>
+#include <helipad_det/Signature Processing.h>
 #include <helipad_det/isSimilar.h>
-
 #include <opencv2/opencv.hpp>
 
 int main(int argc, char** argv)
@@ -14,7 +12,7 @@ int main(int argc, char** argv)
     param_get.getParam("/helipad_det/low_threshold", canny_lowThres);
     param_get.getParam("/helipad_det/ratio", ratio);
     param_get.getParam("/helipad_det/kernel_size", kernel_size);
-    cv::Mat img = cv::imread("etc/img.png");
+    cv::Mat img = cv::imread("etc/Refined H.jpg");
     ROS_ASSERT(img.empty()!=true);
     // cv::imshow("img", img);
     cv::Mat prepro_img = Preprocess(img, canny_lowThres, ratio, kernel_size);
@@ -33,13 +31,15 @@ int main(int argc, char** argv)
         std::vector<double> temp(ListDistance.at(i).size());
         smooth(ListDistance.at(i), temp);
         graph(temp, "Refined Graph");
-        if(isSimilar(temp)==1)
-        {
-            std::cout << std::endl << "CHAAP-ED" << std::endl;
-        }
+        // if(isSimilar(temp)==1)
+        // {
+        //     std::cout << std::endl << "CHAAP-ED" << std::endl;
+        // }
         cv::drawContours(img_tmp, ListContours, i, cv::Scalar(255, 0, 255));
+        Retrace(temp, ListContours.at(i), img_tmp);
         cv::imshow("contours", img_tmp);
-        if((char)cv::waitKey(0)=='q')return -1;
+        if((char)cv::waitKey(0)=='q')
+            return -1;
         cv::destroyAllWindows();
         ros::spinOnce();
         std::cout << temp.size() << std::endl;
