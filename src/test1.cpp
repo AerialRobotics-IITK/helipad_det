@@ -12,7 +12,7 @@ int main(int argc, char** argv)
     param_get.getParam("/helipad_det/low_threshold", canny_lowThres);
     param_get.getParam("/helipad_det/ratio", ratio);
     param_get.getParam("/helipad_det/kernel_size", kernel_size);
-    cv::Mat img = cv::imread("/home/tanay/catkin_ws/src/helipad_det/etc/Refined H.png");
+    cv::Mat img = cv::imread("/home/tanay/catkin_ws/src/helipad_det/etc/Refined H.jpg");
     ROS_ASSERT(img.empty()!=true);
     // cv::imshow("img", img);
     cv::Mat prepro_img = Preprocess(img, canny_lowThres, ratio, kernel_size);
@@ -24,7 +24,6 @@ int main(int argc, char** argv)
 	std::vector<double> Distances;
     for(i=0;i<ListContours.size();i++)
     {
-        std::vector<double> Distances;
         cv::Mat img_tmp;
         img_tmp = img.clone();
         pointToLineDistance(ListContours.at(i), Distances);
@@ -41,9 +40,9 @@ int main(int argc, char** argv)
         Distances.clear();
         cv::destroyAllWindows();
         ros::spinOnce();
-        // for(int j=0;j<temp.size();j++)
-        //     std::cout << temp.at(j) << std::endl;
-        // std::cout << std::endl << std::endl;
+        for(int j=0;j<temp.size();j++)
+            std::cout << temp.at(j) << std::endl;
+        std::cout << std::endl << std::endl;
     }
     return 0;
 }

@@ -29,63 +29,68 @@ void pointToLineDistance(const std::vector<cv::Point>& contour, std::vector<doub
 void smooth(const std::vector<double>& input, std::vector<double>& output){
     ROS_ASSERT(input.size()==output.size());
     int i;
-    
+
     for(i=0;i<output.size();i++)
         output[i]=0;
 
-    if(input[0]>input[1] && input[0]>input[input.size()-1] && input[0]>=1)
+    if(input[0]>input[1] && input[0]>input[input.size()-1])// input[0]>=1)
         output[0]=input[0];
 
-    if(input[input.size()-1]>input[input.size()-2] && input[input.size()-1]> input[0] && input[input.size()-1]>=1)
+    if(input[input.size()-1]>input[input.size()-2] && input[input.size()-1]> input[0])// input[input.size()-1]>=1)
         output[input.size()-1]=input[input.size()-1];
 
     for(i=1;i<input.size()-1;i++)
     {
-        if(input[i]>=input[i+1] && input[i]>=input[i-1] && input[i]>=1)
+        if(input[i]>=input[i+1] && input[i]>=input[i-1])//input[i]>=1)
             output[i]=input[i];
         else
             output[i]=0;
     }
+    
     int n=round(input.size()/(26*3));
-    int x0, y0, count;
-    // for(i = 0;i<n;i++)
-    // {
-    //     if(output.at(i)==0)
-    //         continue;
-    //     else
-    //     {
-    //         x0 = 0;
-    //         y0 = 0;
-    //         count = 0;
-    //         for(int j=output.size()-n;j<output.size();j++)
-    //         {
-    //             if(output.at(j)==0)
-    //                 continue;
-    //             else
-    //             {
-    //                 count++;
-    //                     x0 += j-output.size();
-    //                 if(output.at(j)>y0)
-    //                     y0=output.at(j);
-    //                 output.at(j)=0;
-    //             }
-    //         }
-    //         for(int j=0;j<=i+n;j++)
-    //         {
-    //             if(output.at(j)==0)
-    //                 continue;
-    //             else
-    //             {
-    //                 count++;
-    //                     x0 += j;
-    //                 if(output.at(j)>y0)
-    //                     y0=output.at(j);
-    //                 output.at(j)=0;
-    //             }
-    //         }
-    //         output.at(round(x0/count))=y0;
-    //     }
-    // }
+    std::cout <<"BRUH " << n << " BRUH" << std::endl ;
+    int x0, y0;
+
+    for(i = 0;i<n;i++)
+    {
+        if(output.at(i)==0)
+            continue;
+        else
+        {
+            x0 = 0;
+            y0 = 0;
+            for(int j=output.size()-n+i;j<output.size();j++)//Handling cases at the end of the vector
+            {
+                if(output.at(j)==0)
+                    continue;
+                else
+                {
+                    if(output.at(j)>y0)
+                    {
+                        x0=j;
+                        y0=output.at(j);
+                    }
+                    output.at(j)=0;
+                }
+            }
+            for(int j=0;j<=n+i;j++)//Handling cases at the start of the vector
+            {
+                if(output.at(j)==0)
+                    continue;
+                else
+                {
+                    if(output.at(j)>y0)
+                    {
+                        x0=j;
+                        y0=output.at(j);
+                    }
+                    output.at(j)=0;
+                }
+            }
+            output.at(x0)=y0;
+        }
+    }
+
     for(i = n;i<output.size()-n;i++)
     {
         if(output.at(i)==0)
@@ -94,23 +99,80 @@ void smooth(const std::vector<double>& input, std::vector<double>& output){
         {
             x0 = 0;
             y0 = 0;
-            count = 0;
             for(int j=i-n;j<=i+n;j++)
             {
                 if(output.at(j)==0)
                     continue;
                 else
                 {
-                    count++;
-                    x0 += j;
                     if(output.at(j)>y0)
+                    {
+                        x0=j;
                         y0=output.at(j);
+                    }
                     output.at(j)=0;
                 }
             }
-            output.at(round(x0/count))=y0;
+            output.at(x0)=y0;
         }
     }
+
+    for(i = output.size()-n;i<output.size();i++)
+    {
+        if(output.at(i)==0)
+            continue;
+        else
+        {
+            x0 = 0;
+            y0 = 0;
+            for(int j=i-n;j<output.size();j++)//Handling cases at the end of the vector
+            {
+                if(output.at(j)==0)
+                    continue;
+                else
+                {
+                    if(output.at(j)>y0)
+                    {
+                        x0=j;
+                        y0=output.at(j);
+                    }
+                    output.at(j)=0;
+                }
+            }
+            for(int j=0;j<=n+i-output.size();j++)//Handling cases at the start of the vector
+            {
+                if(output.at(j)==0)
+                    continue;
+                else
+                {
+                    if(output.at(j)>y0)
+                    {
+                        x0=j;
+                        y0=output.at(j);
+                    }
+                    output.at(j)=0;
+                }
+            }
+            output.at(x0)=y0;
+        }
+    }
+    double mean=0, sd, mean_sq=0, count=0;
+    for(i=0;i<output.size();i++)
+    {
+        if (output.at(i)!=0)
+        {
+            mean += output.at(i);
+            mean_sq += output.at(i)*output.at(i);
+            count++;
+        }
+    }
+    mean_sq = mean_sq/count;
+    mean = mean/count;
+    sd = sqrt(mean_sq - mean*mean);
+    std::cout << "YEET" << mean << "+_+" << sd << "YEET" << std::endl;
+    for(i=0;i<output.size();i++)
+        if(output.at(i)<mean-sd)
+            output.at(i)=0;
 }
 
 void smoother(const std::vector<double>& input, std::vector<double>& output){

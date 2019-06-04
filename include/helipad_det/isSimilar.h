@@ -1,3 +1,6 @@
+#include <iostream>
+#include <math.h>
+
 int isSimilar(const std::vector<double>& ListSignatures){
 	
 	
