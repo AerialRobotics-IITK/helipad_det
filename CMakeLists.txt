@@ -32,6 +32,9 @@ target_link_libraries(hdetect ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 add_executable(test1 src/test1.cpp)
 target_link_libraries(test1 ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 
+add_executable(test_vid src/test_vid.cpp)
+target_link_libraries(test_vid ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 

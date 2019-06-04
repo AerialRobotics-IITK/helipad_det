@@ -34,15 +34,16 @@ int main(int argc, char** argv)
             std::cout << "CHAAP-ED" << std::endl;
         cv::drawContours(img_tmp, ListContours, i, cv::Scalar(255, 0, 255));
         Retrace(temp, ListContours.at(i), img_tmp);
+        centre(temp, ListContours.at(i), img_tmp);
         cv::imshow("contours", img_tmp);
         if((char)cv::waitKey(0)=='q')
             return -1;
         Distances.clear();
         cv::destroyAllWindows();
         ros::spinOnce();
-        for(int j=0;j<temp.size();j++)
-            std::cout << temp.at(j) << std::endl;
-        std::cout << std::endl << std::endl;
+        // for(int j=0;j<temp.size();j++)
+        //     std::cout << temp.at(j) << std::endl;
+        // std::cout << std::endl << std::endl;
     }
     return 0;
 }

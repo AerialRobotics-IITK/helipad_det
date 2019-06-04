@@ -1,6 +1,6 @@
 #include <opencv2/opencv.hpp>
 
-cv::Mat Preprocess(cv::Mat img, int canny_lowThreshold, int canny_ratio, int canny_kernel_size){
+cv::Mat Preprocess(const cv::Mat& img, int canny_lowThreshold, int canny_ratio, int canny_kernel_size){
     cv::Mat gray, blur, result;
     std::vector<cv::Vec4i> linesP;
     cv::cvtColor(img,gray,CV_BGR2GRAY);
