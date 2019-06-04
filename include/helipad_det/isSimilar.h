@@ -2,17 +2,22 @@ int isSimilar(const std::vector<double>& ListSignatures){
 	
 	
 	double a = 0.19, b = 0.04, c = 0.08, d = 0.08;
-	double tolerance=0.05;
+	double tolerance=0.2;
+
+
 	int ListSignaturesSize = ListSignatures.size();
+	std::cout << "What is the size ??  " << ListSignaturesSize << std::endl;
 
 	int StartIndex=-1;
 
 	for (int i=0;i<ListSignaturesSize;i++){
 		if (ListSignatures.at(i)==0) continue;
 		else {
+			//std::cout << i << std::endl;
 			int ZeroLength=0;
-			int Index = i;
-			while (ListSignatures.at(Index+ZeroLength)==0) ZeroLength++;
+			int Index = i+1;
+			while (Index+ZeroLength < ListSignaturesSize && ListSignatures.at(Index+ZeroLength)==0 ) ZeroLength++;
+			std::cout << "Zero length " << ZeroLength << std::endl; 
 			if (abs(ZeroLength-a*ListSignaturesSize) < (tolerance*ListSignaturesSize)){
 				StartIndex=i;
 				break;
@@ -22,7 +27,9 @@ int isSimilar(const std::vector<double>& ListSignatures){
 
 	if (StartIndex==-1) return 0;
 
-	std::vector<double> UpdatedListSignatures(100);
+	std::cout << "Kabeer" << std::endl;	
+
+	std::vector<double> UpdatedListSignatures;
 
 	int Segments[12];
 	int CountSegments=0;
@@ -32,11 +39,11 @@ int isSimilar(const std::vector<double>& ListSignatures){
 	graph(UpdatedListSignatures, "Updated Graph");
 	for (int i=0;i<ListSignaturesSize;i++){
 		if (UpdatedListSignatures.at(i)==0) continue;
-		
+			
 		if (CountSegments > 12) return 0;
 		
 		int Length=1;
-		while (ListSignatures.at(i+Length)==0) Length++;
+		while ((i+Length)< UpdatedListSignatures.size() && ListSignatures.at(i+Length)==0) Length++;
 		Segments[CountSegments]=Length;
 		CountSegments++;
 	}
@@ -57,6 +64,7 @@ int isSimilar(const std::vector<double>& ListSignatures){
 	if (abs(Segments[10]-(c*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
 	if (abs(Segments[11]-(b*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
 
+	std::cout << "BIG GEY" << std::endl;
 	return 1;
 
 
