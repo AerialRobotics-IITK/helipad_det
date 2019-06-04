@@ -48,7 +48,7 @@ void smooth(const std::vector<double>& input, std::vector<double>& output){
     }
     
     int n=round(input.size()/(26*3));
-    std::cout <<"BRUH " << n << " BRUH" << std::endl ;
+    //std::cout <<"BRUH " << n << " BRUH" << std::endl ;
     int x0, y0;
 
     for(i = 0;i<n;i++)
@@ -169,7 +169,7 @@ void smooth(const std::vector<double>& input, std::vector<double>& output){
     mean_sq = mean_sq/count;
     mean = mean/count;
     sd = sqrt(mean_sq - mean*mean);
-    std::cout << "YEET" << mean << "+_+" << sd << "YEET" << std::endl;
+    //std::cout << "YEET" << mean << "+_+" << sd << "YEET" << std::endl;
     for(i=0;i<output.size();i++)
         if(output.at(i)<mean-sd)
             output.at(i)=0;
@@ -185,7 +185,7 @@ void smoother(const std::vector<double>& input, std::vector<double>& output){
     for(i=1;i<input.size()-1;i++)
         Derivative.push_back((input.at(i+1)-input.at(i-1))/2);
     Derivative.push_back(input.at(0)-input.at(input.at(input.size()-2)));
-    graph(Derivative , "Derivative");
+    //graph(Derivative , "Derivative");
 
     for (i=0;i<Derivative.size();i++)
     {
@@ -248,7 +248,7 @@ void graph(const std::vector<double>& signature, cv::String str){
     cv::namedWindow(str, CV_WINDOW_FREERATIO);
     // cv::moveWindow(str, size, 0);
     cv::imshow(str, plt);
-    cv::waitKey(0);
+    // cv::waitKey(0);
     cv::destroyAllWindows();
 }
 

@@ -9,7 +9,7 @@ int isSimilar(const std::vector<double>& ListSignatures){
 
 
 	int ListSignaturesSize = ListSignatures.size();
-	std::cout << "What is the size ??  " << ListSignaturesSize << std::endl;
+	//std::cout << "What is the size ??  " << ListSignaturesSize << std::endl;
 
 	int StartIndex=-1;
 
@@ -20,7 +20,7 @@ int isSimilar(const std::vector<double>& ListSignatures){
 			int ZeroLength=0;
 			int Index = i+1;
 			while (Index+ZeroLength < ListSignaturesSize && ListSignatures.at(Index+ZeroLength)==0 ) ZeroLength++;
-			std::cout << "Zero length " << ZeroLength << std::endl; 
+			//std::cout << "Zero length " << ZeroLength << std::endl; 
 			if (abs(ZeroLength-a*ListSignaturesSize) < (tolerance*ListSignaturesSize)){
 				StartIndex=i;
 				break;
@@ -30,7 +30,7 @@ int isSimilar(const std::vector<double>& ListSignatures){
 
 	if (StartIndex==-1) return 0;
 
-	std::cout << "Kabeer" << std::endl;	
+	//std::cout << "Kabeer" << std::endl;	
 
 	std::vector<double> UpdatedListSignatures;
 
@@ -38,8 +38,8 @@ int isSimilar(const std::vector<double>& ListSignatures){
 	int CountSegments=0;
 	for (int i=StartIndex;i<ListSignaturesSize;i++) UpdatedListSignatures.push_back(ListSignatures.at(i));
 	for (int i=0;i<StartIndex;i++) UpdatedListSignatures.push_back(ListSignatures.at(i));
-	std::cout << "GEY" << std::endl;
-	graph(UpdatedListSignatures, "Updated Graph");
+	//std::cout << "GEY" << std::endl;
+	//graph(UpdatedListSignatures, "Updated Graph");
 	for (int i=0;i<ListSignaturesSize;i++){
 		if (UpdatedListSignatures.at(i)==0) continue;
 			
@@ -50,7 +50,7 @@ int isSimilar(const std::vector<double>& ListSignatures){
 		Segments[CountSegments]=Length;
 		CountSegments++;
 	}
-	std::cout << "GEY" <<std::endl;
+	//std::cout << "GEY" <<std::endl;
 	if (CountSegments < 12) return 0;
 
 
@@ -67,7 +67,7 @@ int isSimilar(const std::vector<double>& ListSignatures){
 	if (abs(Segments[10]-(c*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
 	if (abs(Segments[11]-(b*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
 
-	std::cout << "BIG GEY" << std::endl;
+	//std::cout << "BIG GEY" << std::endl;
 	return 1;
 
 

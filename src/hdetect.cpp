@@ -6,7 +6,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <helipad_det/Preprocess.h>
 #include <helipad_det/Signature Processing.h>
-#include <helipad_det/isSimilar.h>
+#include <helipad_det/Signature Matching.h>
 
 int lowThreshold;
 int ratio;
@@ -76,6 +76,7 @@ class ImageConverter{
     	std::vector<cv::Vec4i> hierarchy;
     	cv::findContours(prepro_img, ListContours, hierarchy, CV_RETR_LIST, CV_CHAIN_APPROX_NONE);
 		std::vector<std::vector<double> > ListDistance(ListContours.size());
+		int number=0;
     	for(int i=0;i<ListContours.size();i++)
     	{
         	cv::Mat img_tmp;
@@ -86,7 +87,9 @@ class ImageConverter{
         	//graph(temp, "Refined Graph");
         	if(isSimilar(temp)==1)
         	{
-            	std::cout << "CHAAP-ED" << std::endl;
+            	std::cout << "CHAAP-ED " << number << std::endl;
+							number++;
+							number = number % 200;
             	cv::drawContours(img_tmp, ListContours, i, cv::Scalar(255, 0, 255));
         		Retrace(temp, ListContours.at(i), img_tmp);
         	}
