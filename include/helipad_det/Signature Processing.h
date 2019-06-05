@@ -281,6 +281,8 @@ void graph(const std::vector<double>& signature, cv::String str){
     for(int i=0;i<size;i++)
     {
         cv::circle(plt, cv::Point2d(0.1*size+i, size-(0.7/max)*size*signature.at(i)), 3, cv::Scalar(0, 0, 255), CV_FILLED);
+        if((size-(0.7/max)*size*signature.at(i))>0)
+            cv::line(plt, cv::Point2d(0.1*size-0.01*size, (size-(0.7/max)*size*i)), cv::Point2d(0.1*size+0.01*size, (size-(0.7/max)*size*i)), cv::Scalar(255, 0, 0));
     }
     cv::namedWindow(str, CV_WINDOW_FREERATIO);
     // cv::moveWindow(str, size, 0);
@@ -293,4 +295,8 @@ void Retrace(const std::vector<double>& Signature, const std::vector<cv::Point>&
     for(int i=0;i<Signature.size();i++)
         if(Signature.at(i)!=0)
             cv::circle(img, Contour.at(i), 5, cv::Scalar(0, 0, 255));
+}
+
+void centre(const std::vector<double>& Signature, cv::Mat img){
+
 }
