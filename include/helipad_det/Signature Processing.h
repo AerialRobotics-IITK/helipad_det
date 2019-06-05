@@ -27,19 +27,18 @@ void pointToLineDistance(const std::vector<cv::Point>& contour, std::vector<doub
 }
 
 void smooth(const std::vector<double>& input, std::vector<double>& output){
-    ROS_ASSERT(input.size()==output.size());
-    int i;
+    int i, size=input.size();
 
-    for(i=0;i<output.size();i++)
-        output[i]=0;
+    for(i=0;i<size;i++)
+        output.push_back(0);
 
-    if(input[0]>input[1] && input[0]>input[input.size()-1])// input[0]>=1)
+    if(input[0]>input[1] && input[0]>input[size-1])// input[0]>=1)
         output[0]=input[0];
 
-    if(input[input.size()-1]>input[input.size()-2] && input[input.size()-1]> input[0])// input[input.size()-1]>=1)
-        output[input.size()-1]=input[input.size()-1];
+    if(input[size-1]>input[size-2] && input[size-1]> input[0])// input[size-1]>=1)
+        output[size-1]=input[size-1];
 
-    for(i=1;i<input.size()-1;i++)
+    for(i=1;i<size-1;i++)
     {
         if(input[i]>=input[i+1] && input[i]>=input[i-1])//input[i]>=1)
             output[i]=input[i];
@@ -47,9 +46,10 @@ void smooth(const std::vector<double>& input, std::vector<double>& output){
             output[i]=0;
     }
     
-    int n=round(input.size()/(26*3));
+    int n=round(size/(26*3));
     //std::cout <<"BRUH " << n << " BRUH" << std::endl ;
-    int x0, y0;
+    int x0; 
+    double y0;
 
     for(i = 0;i<n;i++)
     {
@@ -59,7 +59,7 @@ void smooth(const std::vector<double>& input, std::vector<double>& output){
         {
             x0 = 0;
             y0 = 0;
-            for(int j=output.size()-n+i;j<output.size();j++)//Handling cases at the end of the vector
+            for(int j=size-n+i;j<size;j++)//Handling cases at the end of the vector
             {
                 if(output.at(j)==0)
                     continue;
@@ -91,7 +91,7 @@ void smooth(const std::vector<double>& input, std::vector<double>& output){
         }
     }
 
-    for(i = n;i<output.size()-n;i++)
+    for(i = n;i<size-n;i++)
     {
         if(output.at(i)==0)
             continue;
@@ -117,7 +117,7 @@ void smooth(const std::vector<double>& input, std::vector<double>& output){
         }
     }
 
-    for(i = output.size()-n;i<output.size();i++)
+    for(i = size-n;i<size;i++)
     {
         if(output.at(i)==0)
             continue;
@@ -125,7 +125,7 @@ void smooth(const std::vector<double>& input, std::vector<double>& output){
         {
             x0 = 0;
             y0 = 0;
-            for(int j=i-n;j<output.size();j++)//Handling cases at the end of the vector
+            for(int j=i-n;j<size;j++)//Handling cases at the end of the vector
             {
                 if(output.at(j)==0)
                     continue;
@@ -139,7 +139,7 @@ void smooth(const std::vector<double>& input, std::vector<double>& output){
                     output.at(j)=0;
                 }
             }
-            for(int j=0;j<=n+i-output.size();j++)//Handling cases at the start of the vector
+            for(int j=0;j<=n+i-size;j++)//Handling cases at the start of the vector
             {
                 if(output.at(j)==0)
                     continue;
@@ -157,7 +157,7 @@ void smooth(const std::vector<double>& input, std::vector<double>& output){
         }
     }
     double mean=0, sd, mean_sq=0, count=0;
-    for(i=0;i<output.size();i++)
+    for(i=0;i<size;i++)
     {
         if (output.at(i)!=0)
         {
@@ -170,7 +170,7 @@ void smooth(const std::vector<double>& input, std::vector<double>& output){
     mean = mean/count;
     sd = sqrt(mean_sq - mean*mean);
     //std::cout << "YEET" << mean << "+_+" << sd << "YEET" << std::endl;
-    for(i=0;i<output.size();i++)
+    for(i=0;i<size;i++)
         if(output.at(i)<mean-sd)
             output.at(i)=0;
 }
@@ -246,9 +246,9 @@ void graph(const std::vector<double>& signature, cv::String str){
         cv::circle(plt, cv::Point2d(0.1*size+i, size-(0.7/max)*size*signature.at(i)), 3, cv::Scalar(0, 0, 255), CV_FILLED);
     }
     cv::namedWindow(str, CV_WINDOW_FREERATIO);
-    // cv::moveWindow(str, size, 0);
+    cv::moveWindow(str, size, 0);
     cv::imshow(str, plt);
-    // cv::waitKey(0);
+    cv::waitKey(0);
     cv::destroyAllWindows();
 }
 
@@ -256,4 +256,20 @@ void Retrace(const std::vector<double>& Signature, const std::vector<cv::Point>&
     for(int i=0;i<Signature.size();i++)
         if(Signature.at(i)!=0)
             cv::circle(img, Contour.at(i), 5, cv::Scalar(0, 0, 255));
+}
+
+void centre(const std::vector<double>& Signature, const std::vector<cv::Point>& Contour, cv::Mat img){
+    int x0=0, y0=0, count=0;
+    for(int i=0;i<Signature.size();i++)
+    {
+        if(Signature.at(i)!=0)
+        {
+            count++;
+            x0 += Contour.at(i).x;
+            y0 += Contour.at(i).y;
+        }
+    }
+    x0 = round(((double)x0)/count);
+    y0 = round(((double)y0)/count);
+    cv::circle(img, cv::Point(x0, y0), 5, cv::Scalar(0, 0, 255));
 }
