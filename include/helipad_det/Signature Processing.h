@@ -297,6 +297,18 @@ void Retrace(const std::vector<double>& Signature, const std::vector<cv::Point>&
             cv::circle(img, Contour.at(i), 5, cv::Scalar(0, 0, 255));
 }
 
-void centre(const std::vector<double>& Signature, cv::Mat img){
-
+void centre(const std::vector<double>& Signature, const std::vector<cv::Point> Contour, cv::Mat img){
+    int x0=0, y0=0, count=0;
+    for(int i=0;i<Signature.size();i++)
+    {
+        if(Signature.at(i)!=0)
+        {
+            count++;
+            x0 += Contour.at(i).x;
+            y0 += Contour.at(i).y;
+        }
+    }
+    x0 = round( (double)x0/count);
+    y0 = round( (double)y0/count);
+    cv::circle(img, cv::Point(x0, y0), 3, cv::Scalar(255, 0, 0), -1);
 }

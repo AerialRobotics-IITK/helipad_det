@@ -37,6 +37,7 @@ int main(int argc, char** argv)
         if(isSimilar(temp)==1)
         {
             std::cout << "CHAAP-ED" << std::endl;
+            centre(temp, ListContours.at(i), img_tmp);
         }
         cv::drawContours(img_tmp, ListContours, i, cv::Scalar(255, 0, 255));
         Retrace(temp, ListContours.at(i), img_tmp);

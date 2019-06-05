@@ -29,6 +29,8 @@ int main(int argc, char** argv)
 
         for(i=0;i<ListContours.size();i++)
         {
+            if(cv::contourArea(ListContours.at(i)) < 0.01*frame.size().area())
+                continue;
             Distances.clear();
             Signature.clear();
             pointToLineDistance(ListContours.at(i), Distances);
@@ -40,7 +42,7 @@ int main(int argc, char** argv)
                 count++;
                 std::cout << "CHAAP-ED" << count << std::endl;
                 cv::drawContours(frame, ListContours, i, cv::Scalar(255, 0, 255));
-                // centre(Signature, ListContours.at(i), frame);
+                centre(Signature, ListContours.at(i), frame);
                 break;
             }
         }
