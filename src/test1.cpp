@@ -12,7 +12,9 @@ int main(int argc, char** argv)
     param_get.getParam("/helipad_det/low_threshold", canny_lowThres);
     param_get.getParam("/helipad_det/ratio", ratio);
     param_get.getParam("/helipad_det/kernel_size", kernel_size);
-    cv::Mat img = cv::imread("/home/kabeer/H_det/src/helipad_det/etc/Refined H.png");
+    cv::Mat img = cv::imread("/home/tanay/catkin_ws/src/helipad_det/etc/Refined H.png");
+    cv::Size size = img.size();
+    int type = img.type();
     ROS_ASSERT(img.empty()!=true);
     // cv::imshow("img", img);
     cv::Mat prepro_img = Preprocess(img, canny_lowThres, ratio, kernel_size);
@@ -20,30 +22,34 @@ int main(int argc, char** argv)
     cv::waitKey(0);
     cv::destroyAllWindows();
     std::vector<std::vector<cv::Point> > ListContours;
-    cv::findContours(prepro_img, ListContours, CV_RETR_LIST, CV_CHAIN_APPROX_NONE);
-	std::vector<double> Distances;
+
+    cv::findContours(prepro_img, ListContours, CV_RETR_TREE, CV_CHAIN_APPROX_NONE);
+	std::vector<std::vector<double> > ListDistance(ListContours.size());
     for(i=0;i<ListContours.size();i++)
     {
-        cv::Mat img_tmp;
-        img_tmp = img.clone();
-        pointToLineDistance(ListContours.at(i), Distances);
-        std::vector<double> temp(Distances.size());
-        smooth(Distances, temp);
+        cv::Mat img_tmp = cv::Mat::zeros(size, type);
+        pointToLineDistance(ListContours.at(i), ListDistance.at(i));
+        std::vector<double> temp(ListDistance.at(i).size());
+        std::cout << cv::contourArea(ListContours.at(i)) << std::endl ;
+        smooth(ListDistance.at(i), temp);
+        graph(ListDistance.at(i), "Unrefined Graph");
         graph(temp, "Refined Graph");
         if(isSimilar(temp)==1)
+        {
             std::cout << "CHAAP-ED" << std::endl;
+        }
         cv::drawContours(img_tmp, ListContours, i, cv::Scalar(255, 0, 255));
         Retrace(temp, ListContours.at(i), img_tmp);
-        centre(temp, ListContours.at(i), img_tmp);
         cv::imshow("contours", img_tmp);
+
         if((char)cv::waitKey(0)=='q')
             return -1;
-        Distances.clear();
         cv::destroyAllWindows();
         ros::spinOnce();
         // for(int j=0;j<temp.size();j++)
         //     std::cout << temp.at(j) << std::endl;
         // std::cout << std::endl << std::endl;
     }
+    std::cout << size.area() << std::endl ;
     return 0;
 }
