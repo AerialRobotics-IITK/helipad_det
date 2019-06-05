@@ -11,6 +11,7 @@
 int lowThreshold;
 int ratio;
 int kernel_size;
+int number=0;
 
 class ImageConverter{
 	ros::NodeHandle nh;
@@ -49,7 +50,7 @@ class ImageConverter{
 
 	    img=cv_ptr->image;
 	    
-	    /*preprocess_result=Preprocess(img, lowThreshold, ratio, kernel_size);
+	/*preprocess_result=Preprocess(img, lowThreshold, ratio, kernel_size);
 	    
 	    std::vector<std::vector<cv::Point> > ListContours;
 	    std::vector<std::vector<double> > ListDistance;
@@ -74,12 +75,18 @@ class ImageConverter{
     	std::vector<std::vector<cv::Point> > ListContours;
 
     	std::vector<cv::Vec4i> hierarchy;
+
+
+    	cv::Mat img_tmp;
     	cv::findContours(prepro_img, ListContours, hierarchy, CV_RETR_LIST, CV_CHAIN_APPROX_NONE);
 		std::vector<std::vector<double> > ListDistance(ListContours.size());
-		int number=0;
+		cv::cvtColor(prepro_img, img_tmp, CV_GRAY2BGR);
+
+ 		cv::Mat ContoursDraw;
+
     	for(int i=0;i<ListContours.size();i++)
     	{
-        	cv::Mat img_tmp;
+        	if (ListContours.at(i).size() < 1000) continue;
         	img_tmp = img.clone();
         	pointToLineDistance(ListContours.at(i), ListDistance.at(i));
         	std::vector<double> temp(ListDistance.at(i).size());
@@ -88,26 +95,29 @@ class ImageConverter{
         	if(isSimilar(temp)==1)
         	{
             	std::cout << "CHAAP-ED " << number << std::endl;
-							number++;
-							number = number % 200;
-            	cv::drawContours(img_tmp, ListContours, i, cv::Scalar(255, 0, 255));
-        		Retrace(temp, ListContours.at(i), img_tmp);
+				number++;	
+				if (number==1000) number=0;	
+
+            	cv::drawContours(ContoursDraw, ListContours, i, cv::Scalar(255, 0, 255));
+        		//Retrace(temp, ListContours.at(i), img_tmp);
         	}
-        cv::cvtColor(prepro_img,img_tmp,CV_GRAY2BGR);
-	    cv_bridge::CvImage Can_img;
- 		Can_img.header.stamp = ros::Time::now();
- 		Can_img.encoding = sensor_msgs::image_encodings::BGR8;
- 		Can_img.image = img_tmp;
- 		image_pub.publish(Can_img.toImageMsg());
+
         //cv::imshow("contours", img_tmp);
         //if((char)cv::waitKey(0)=='q')
             //return -1;
         //cv::destroyAllWindows();	
+
+        cv_bridge::CvImage Can_img;
+ 		Can_img.header.stamp = ros::Time::now();
+ 		Can_img.encoding = sensor_msgs::image_encodings::BGR8;
+ 		Can_img.image = ContoursDraw;
+ 		image_pub.publish(Can_img.toImageMsg());
         ros::spinOnce();
         // for(int j=0;j<temp.size();j++)
         //     std::cout << temp.at(j) << std::endl;
         // std::cout << std::endl << std::endl;
     	}
+    	ros::spinOnce();
       return;
   	}
 

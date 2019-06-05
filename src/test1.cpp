@@ -12,7 +12,7 @@ int main(int argc, char** argv)
     param_get.getParam("/helipad_det/low_threshold", canny_lowThres);
     param_get.getParam("/helipad_det/ratio", ratio);
     param_get.getParam("/helipad_det/kernel_size", kernel_size);
-    cv::Mat img = cv::imread("/home/tanay/catkin_ws/src/helipad_det/etc/Refined H.jpg");
+    cv::Mat img = cv::imread("/home/kabeer/H_det/src/helipad_det/etc/Refined H.png");
     ROS_ASSERT(img.empty()!=true);
     // cv::imshow("img", img);
     cv::Mat prepro_img = Preprocess(img, canny_lowThres, ratio, kernel_size);
