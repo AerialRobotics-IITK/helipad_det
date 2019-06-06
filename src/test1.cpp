@@ -7,11 +7,11 @@
 int main(int argc, char** argv)
 {
     ros::init(argc, argv, "test1");
-    ros::NodeHandle param_get;
+    ros::NodeHandle param_get("~");
     int canny_lowThres, ratio, kernel_size, i;
-    param_get.getParam("/helipad_det/low_threshold", canny_lowThres);
-    param_get.getParam("/helipad_det/ratio", ratio);
-    param_get.getParam("/helipad_det/kernel_size", kernel_size);
+    param_get.param("low_threshold", canny_lowThres, 50);
+    param_get.param("ratio", ratio, 3);
+    param_get.param("kernel_size", kernel_size, 3);
     cv::Mat img = cv::imread("/home/tanay/catkin_ws/src/helipad_det/etc/Refined H.png");
     cv::Size size = img.size();
     int type = img.type();
@@ -30,7 +30,7 @@ int main(int argc, char** argv)
         cv::Mat img_tmp = cv::Mat::zeros(size, type);
         pointToLineDistance(ListContours.at(i), ListDistance.at(i));
         std::vector<double> temp(ListDistance.at(i).size());
-        std::cout << cv::contourArea(ListContours.at(i)) << std::endl ;
+        std::cout << ListContours.at(i).size() << std::endl ;
         smooth(ListDistance.at(i), temp);
         graph(ListDistance.at(i), "Unrefined Graph");
         graph(temp, "Refined Graph");

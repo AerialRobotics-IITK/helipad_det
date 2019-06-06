@@ -33,15 +33,15 @@ void smooth(const std::vector<double>& input, std::vector<double>& output){
     for(i=0;i<output.size();i++)
         output[i]=0;
 
-    if(input[0]>input[1] && input[0]>input[input.size()-1])
+    if(input[0]>=input[1] && input[0]>=input[input.size()-1] && input[0]>=0.002*input.size())
         output[0]=input[0];
 
-    if(input[input.size()-1]>input[input.size()-2] && input[input.size()-1]> input[0])
+    if(input[input.size()-1]>=input[input.size()-2] && input[input.size()-1]>=input[0] && input[input.size()-1]>=0.002*input.size())
         output[input.size()-1]=input[input.size()-1];
 
     for(i=1;i<input.size()-1;i++)
     {
-        if(input[i]>=input[i+1] && input[i]>=input[i-1])
+        if(input[i]>=input[i+1] && input[i]>=input[i-1] && input[i]>=0.002*input.size())
             output[i]=input[i];
         else
             output[i]=0;
@@ -155,22 +155,22 @@ void smooth(const std::vector<double>& input, std::vector<double>& output){
         }
     }
     
-    double mean=0, sd, mean_sq=0, count=0;
-    for(i=0;i<output.size();i++)
-    {
-        if (output.at(i)!=0)
-        {
-            mean += output.at(i);
-            mean_sq += output.at(i)*output.at(i);
-            count++;
-        }
-    }
-    mean_sq = mean_sq/count;
-    mean = mean/count;
-    sd = sqrt(mean_sq - mean*mean);
-    for(i=0;i<output.size();i++)
-        if(output.at(i)<mean-2*sd)
-            output.at(i)=0;
+    // double mean=0, sd, mean_sq=0, count=0;
+    // for(i=0;i<output.size();i++)
+    // {
+    //     if (output.at(i)!=0)
+    //     {
+    //         mean += output.at(i);
+    //         mean_sq += output.at(i)*output.at(i);
+    //         count++;
+    //     }
+    // }
+    // mean_sq = mean_sq/count;
+    // mean = mean/count;
+    // sd = sqrt(mean_sq - mean*mean);
+    // for(i=0;i<output.size();i++)
+    //     if(output.at(i)<mean-2*sd)
+    //         output.at(i)=0;
 
     // for(i = 0;i<n;i++)
     // {

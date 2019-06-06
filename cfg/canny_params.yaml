@@ -1,3 +1,3 @@
-/helipad_det/low_threshold : 100
-/helipad_det/ratio : 3
-/helipad_det/kernel_size : 3
+low_threshold : 100
+ratio : 3
+kernel_size : 3

@@ -15,7 +15,7 @@ int main(int argc, char** argv)
     cv::Mat frame, processed_frame;
     std::vector<std::vector<cv::Point> > ListContours;
     std::vector<double> Distances;
-    std::vector<double> Signature;    
+    std::vector<double> Signature;
     cv::VideoCapture cap;
     cap.open(1);
     
@@ -25,6 +25,7 @@ int main(int argc, char** argv)
         // frame=cv::imread("etc/Refined H.png");
         ROS_ASSERT(frame.empty()!=true);
         processed_frame = Preprocess(frame, canny_lowThres, ratio, kernel_size);
+        cv::imshow("Canny", processed_frame);
         cv::findContours(processed_frame, ListContours, CV_RETR_LIST, CV_CHAIN_APPROX_NONE);
 
         for(i=0;i<ListContours.size();i++)
