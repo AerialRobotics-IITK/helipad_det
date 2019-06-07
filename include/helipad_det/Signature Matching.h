@@ -13,11 +13,10 @@ int isSimilar(const std::vector<double>& ListSignatures){
 		if (ListSignatures.at(i)==0) continue;
 		else {
 			int ZeroLength=0;
-			int Index = i+1;
-			while (Index+ZeroLength < ListSignaturesSize && ListSignatures.at(Index+ZeroLength)==0)
+			while (i+ZeroLength < ListSignaturesSize-1 && ListSignatures.at(i+1+ZeroLength)==0)
 				ZeroLength++;
 
-			if (abs(ZeroLength-a*ListSignaturesSize) < (tolerance*ListSignaturesSize)){
+			if (abs(ZeroLength+2-a*ListSignaturesSize) < (tolerance*ListSignaturesSize)){//
 				StartIndex=i;
 				break;
 			} 
@@ -33,14 +32,20 @@ int isSimilar(const std::vector<double>& ListSignatures){
 	for (int i=StartIndex;i<ListSignaturesSize;i++) UpdatedListSignatures.push_back(ListSignatures.at(i));
 	for (int i=0;i<StartIndex;i++) UpdatedListSignatures.push_back(ListSignatures.at(i));
 
+	int Length;
+
 	for (int i=0;i<ListSignaturesSize;i++){
 		if (UpdatedListSignatures.at(i)==0) continue;
 			
 		if (CountSegments > 12) return 0;
 		
-		int Length=1;
-		while ((i+Length)< UpdatedListSignatures.size() && ListSignatures.at(i+Length)==0) Length++;
-		Segments[CountSegments]=Length;
+		Length=1;
+		while ((i+Length)< UpdatedListSignatures.size() && UpdatedListSignatures.at(i+Length)==0)
+		{
+			Length++;
+		}
+		i = i+Length-1;
+		Segments[CountSegments]=Length+1;
 		CountSegments++;
 	}
 
