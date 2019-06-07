@@ -27,6 +27,8 @@ int main(int argc, char** argv)
 	std::vector<std::vector<double> > ListDistance(ListContours.size());
     for(i=0;i<ListContours.size();i++)
     {
+        if(cv::contourArea(ListContours.at(i)) < 0.01*img.size().area())
+            continue;
         cv::Mat img_tmp = cv::Mat::zeros(size, type);
         pointToLineDistance(ListContours.at(i), ListDistance.at(i));
         std::vector<double> temp(ListDistance.at(i).size());

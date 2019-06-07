@@ -3,7 +3,7 @@
 
 int isSimilar(const std::vector<double>& ListSignatures){
 	double a = 0.19, b = 0.04, c = 0.08, d = 0.08;
-	double tolerance=0.1;
+	double tolerance=0.2;
 
 	int ListSignaturesSize = ListSignatures.size();
 

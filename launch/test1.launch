@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
     <!-- <include file="$(find usb_cam)/launch/usb_cam-test.launch" /> -->
-    <node pkg="helipad_det" type="test1" name="test1" output="screen" required="true">
+    <node pkg="helipad_det" type="test_vid" name="test_vid" output="screen" required="true">
         <param name="low_threshold" type="int" value="100"/>
         <param name="ratio" type="int" value="3"/>
         <param name="kernel_size" type="int" value="3"/>

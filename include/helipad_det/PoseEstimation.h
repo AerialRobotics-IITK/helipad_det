@@ -1,9 +1,11 @@
+#include <ros/ros.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <nav_msgs/Odometry.h>
 #include <Eigen/Dense>
 #include <Eigen/Core>
-#include <tf/Quaternion.h>
-#include <geometry_msgs/Point>
+#include <tf/LinearMath/Quaternion.h>
+#include <geometry_msgs/Point.h>
+#include <opencv2/opencv.hpp>
 
 geometry_msgs::Point findPose(cv::Point centre,ros::NodeHandle nh)
 {
@@ -16,8 +18,8 @@ geometry_msgs::Point findPose(cv::Point centre,ros::NodeHandle nh)
     Eigen::Matrix3f rotQuadtoCam = quat.toRotationMatrix();
 
     float tCamX = 0, tCamY = 0, tCamZ = 0;
-    nh.getParam("/detector/camera/translation/x", tCamX);//add param
-    nh.getParam("/detector/camera/translation/y", tCamY);
+    nh.param("/detector/camera/translation/x", tCamX, 0.0);//add param
+    nh.param("/detector/camera/translation/y", tCamY, 0.0);
     nh.getParam("/detector/camera/translation/z", tCamZ);
 
     for(int i=0; i<4; i++)
