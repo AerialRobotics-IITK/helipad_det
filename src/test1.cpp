@@ -12,7 +12,7 @@ int main(int argc, char** argv)
     param_get.param("low_threshold", canny_lowThres, 50);
     param_get.param("ratio", ratio, 3);
     param_get.param("kernel_size", kernel_size, 3);
-    cv::Mat img = cv::imread("/home/tanay/catkin_ws/src/helipad_det/etc/Refined H.png");
+    cv::Mat img = cv::imread("/home/tanay/catkin_ws/src/helipad_det/etc/Refined H2.jpg");
     cv::Size size = img.size();
     int type = img.type();
     ROS_ASSERT(img.empty()!=true);
