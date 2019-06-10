@@ -4,20 +4,19 @@
 #include <sensor_msgs/image_encodings.h>
 #include <opencv2/opencv.hpp>
 #include <helipad_det/Preprocess.h>
-#include <helipad_det/Signature Processing.h>
-#include <helipad_det/Signature Matching.h>
+#include <helipad_det/signProc.h>
+#include <helipad_det/signMatch.h>
 #include <helipad_det/PoseEstimation.h>
 
 int canny_lowThres;
 int ratio;
 int kernel_size;
 double a,b,c,d,tolerance;
-nav_msgs::Odometry odom;
+// nav_msgs::Odometry odom;
 
-
-void odomCb(const nav_msgs::Odometry& msg){
-	odom = msg;
-}
+// void odomCb(const nav_msgs::Odometry& msg){
+// 	odom = msg;
+// }
 
 class ImageConverter{
 	private:
@@ -30,12 +29,12 @@ class ImageConverter{
 		ros::Publisher obj_pub;
 		ros::Subscriber Odom_sub;
 		cv::Mat frame, processed_frame, result;
-
+	
 	public:
 	  	ImageConverter():it_(nh){  
 			// Subscribe to input video feed and publish output video feed
 			image_sub = it_.subscribe("usb_cam/image_raw", 1,&ImageConverter::imageCb, this);
-			Odom_sub = nh.subscribe("Odometry",100,odomCb);
+			// Odom_sub = nh.subscribe("Odometry",100,odomCb);
 			image_pub = it_.advertise("Detected_H", 1);
 			image_pub_preprocess = it_.advertise("Preprocessed_image", 1);
 			Pose_pub = nh.advertise<geometry_msgs::Point>("H_position",1);
@@ -104,8 +103,8 @@ class ImageConverter{
 			Detected_H.image = frame;
 			image_pub_preprocess.publish(Preprocessed_img.toImageMsg());
 			image_pub.publish(Detected_H.toImageMsg());
-			geometry_msgs::Point Position = findPose (Centre,nh,odom);
-			Pose_pub.publish(Position);
+			// geometry_msgs::Point Position = findPose (Centre,nh,odom);
+			// Pose_pub.publish(Position);
 			ros::spinOnce();
 		}
 };

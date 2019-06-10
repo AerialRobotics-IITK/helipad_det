@@ -1,10 +1,10 @@
 #include <iostream>
 #include <math.h>
 
-int isSimilar(const std::vector<double>& ListSignatures,double a, double b, double c, double d, double tolerance){
+int isSimilar(const std::vector<double>& ListSignatures, double a, double b, double c, double d, double tolerance){
 	
 	int ListSignaturesSize = ListSignatures.size();
-
+	
 	int StartIndex=-1;
 
 	for (int i=0;i<ListSignaturesSize;i++){

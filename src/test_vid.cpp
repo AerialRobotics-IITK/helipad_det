@@ -1,7 +1,7 @@
 #include <ros/ros.h>
 #include <helipad_det/Preprocess.h>
-#include <helipad_det/Signature Processing.h>
-#include <helipad_det/Signature Matching.h>
+#include <helipad_det/signProc.h>
+#include <helipad_det/signMatch.h>
 #include <opencv2/opencv.hpp>
 
 int main(int argc, char** argv)
