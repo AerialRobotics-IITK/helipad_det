@@ -2,7 +2,6 @@
 #include <helipad_det/Preprocess.h>
 #include <helipad_det/Signature Processing.h>
 #include <helipad_det/Signature Matching.h>
-// #include <helipad_det/PoseEstimation.h>
 #include <opencv2/opencv.hpp>
 
 int main(int argc, char** argv)

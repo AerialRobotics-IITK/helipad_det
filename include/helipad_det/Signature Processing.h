@@ -154,62 +154,6 @@ void smooth(const std::vector<double>& input, std::vector<double>& output){
             output.at(x0)=y0;
         }
     }
-    
-    // double mean=0, sd, mean_sq=0, count=0;
-    // for(i=0;i<output.size();i++)
-    // {
-    //     if (output.at(i)!=0)
-    //     {
-    //         mean += output.at(i);
-    //         mean_sq += output.at(i)*output.at(i);
-    //         count++;
-    //     }
-    // }
-    // mean_sq = mean_sq/count;
-    // mean = mean/count;
-    // sd = sqrt(mean_sq - mean*mean);
-    // for(i=0;i<output.size();i++)
-    //     if(output.at(i)<mean-2*sd)
-    //         output.at(i)=0;
-
-    // for(i = 0;i<n;i++)
-    // {
-    //     if(output.at(i)==0)
-    //         continue;
-    //     else
-    //     {
-    //         x0 = 0;
-    //         y0 = 0;
-    //         count = 0;
-    //         for(int j=output.size()-n;j<output.size();j++)
-    //         {
-    //             if(output.at(j)==0)
-    //                 continue;
-    //             else
-    //             {
-    //                 count++;
-    //                     x0 += j-output.size();
-    //                 if(output.at(j)>y0)
-    //                     y0=output.at(j);
-    //                 output.at(j)=0;
-    //             }
-    //         }
-    //         for(int j=0;j<=i+n;j++)
-    //         {
-    //             if(output.at(j)==0)
-    //                 continue;
-    //             else
-    //             {
-    //                 count++;
-    //                     x0 += j;
-    //                 if(output.at(j)>y0)
-    //                     y0=output.at(j);
-    //                 output.at(j)=0;
-    //             }
-    //         }
-    //         output.at(round(x0/count))=y0;
-    //     }
-    // }
 }
 
 void smoother(const std::vector<double>& input, std::vector<double>& output){
@@ -260,17 +204,6 @@ void smoother(const std::vector<double>& input, std::vector<double>& output){
     }
 }
 
-// void normalize(std::vector<double>& input, std::vector<double>& output, int n){   //DO NOT USE
-//     int i;
-//     for(i=0;i<input.size();i++)
-//     {
-//         if(input[i]==0)
-//             output[i]=3.1416;
-//         else
-//             output[i]=asin((2*input[i]*sqrt(n*n-input[i]*input[i]))/(n*n));
-//     }
-// }
-
 void graph(const std::vector<double>& signature, cv::String str){
     int size = signature.size(), max=0;
     for(int i=0;i<size;i++)
@@ -285,7 +218,6 @@ void graph(const std::vector<double>& signature, cv::String str){
             cv::line(plt, cv::Point2d(0.1*size-0.01*size, (size-(0.7/max)*size*i)), cv::Point2d(0.1*size+0.01*size, (size-(0.7/max)*size*i)), cv::Scalar(255, 0, 0));
     }
     cv::namedWindow(str, CV_WINDOW_FREERATIO);
-    // cv::moveWindow(str, size, 0);
     cv::imshow(str, plt);
     cv::waitKey(0);
     cv::destroyAllWindows();

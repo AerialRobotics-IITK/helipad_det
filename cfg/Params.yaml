@@ -1,11 +1,14 @@
 low_threshold : 100
 ratio : 3
 kernel_size : 3
+
 a : 0.19
 b : 0.04
 c : 0.08
 d : 0.08
+
 tolerance : 0.05
+
 camera : 
   translation :
     x : 0
