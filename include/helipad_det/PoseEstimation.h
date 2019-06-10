@@ -20,13 +20,13 @@ geometry_msgs::Point findPose(cv::Point centre,ros::NodeHandle nh,nav_msgs::Odom
     Eigen::Matrix3f rotGlobtoQuad = rotQuadtoGlob.inverse();
 
     float tCamX = 0, tCamY = 0, tCamZ = 0;
-    nh.getParam("camera/translation/x", tCamX);//add param
-    nh.getParam("camera/translation/y", tCamY);
-    nh.getParam("camera/translation/z", tCamZ);
+    nh.getParam("hdetect/camera/translation/x", tCamX);//add param
+    nh.getParam("hdetect/camera/translation/y", tCamY);
+    nh.getParam("hdetect/camera/translation/z", tCamZ);
 
     std::vector<double> tempList;
 
-    nh.getParam("camera_matrix/data", tempList);
+    nh.getParam("hdetect/camera_matrix/data", tempList);
     int tempIdx=0;
     for(int i=0; i<3; i++)
     {

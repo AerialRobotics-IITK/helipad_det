@@ -25,7 +25,7 @@ class ImageConverter{
 		image_transport::ImageTransport it_;
 		image_transport::Subscriber image_sub;
 		image_transport::Publisher image_pub;
-		image_transport::Publisher image_pub_canny;
+		image_transport::Publisher image_pub_preprocess;
 		ros::Publisher Pose_pub;
 		ros::Publisher obj_pub;
 		ros::Subscriber Odom_sub;
@@ -36,17 +36,17 @@ class ImageConverter{
 			// Subscribe to input video feed and publish output video feed
 			image_sub = it_.subscribe("usb_cam/image_raw", 1,&ImageConverter::imageCb, this);
 			Odom_sub = nh.subscribe("Odometry",100,odomCb);
-			image_pub = it_.advertise("threshold_image", 1);
-			image_pub_canny = it_.advertise("canny_image", 1);
+			image_pub = it_.advertise("Detected_H", 1);
+			image_pub_preprocess = it_.advertise("Preprocessed_image", 1);
 			Pose_pub = nh.advertise<geometry_msgs::Point>("H_position",1);
-			nh.getParam("low_threshold", canny_lowThres);
-			nh.getParam("ratio", ratio);
-			nh.getParam("kernel_size", kernel_size);
-			nh.getParam("a",a);
-			nh.getParam("b",b);
-			nh.getParam("c",c);
-			nh.getParam("d",d);
-			nh.getParam("tolerance",tolerance);
+			nh.getParam("hdetect/low_threshold", canny_lowThres);
+			nh.getParam("hdetect/ratio", ratio);
+			nh.getParam("hdetect/kernel_size", kernel_size);
+			nh.getParam("hdetect/a",a);
+			nh.getParam("hdetect/b",b);
+			nh.getParam("hdetect/c",c);
+			nh.getParam("hdetect/d",d);
+			nh.getParam("hdetect/tolerance",tolerance);
 		}
 
 		~ImageConverter(){}
@@ -71,10 +71,10 @@ class ImageConverter{
 
 			processed_frame = Preprocess(frame, canny_lowThres, ratio, kernel_size);
 			
-			cv_bridge::CvImage Canny;
-			Canny.encoding = sensor_msgs::image_encodings::MONO8;
-			Canny.header.stamp = ros::Time::now();
-			Canny.image = processed_frame;
+			cv_bridge::CvImage Preprocessed_img;
+			Preprocessed_img.encoding = sensor_msgs::image_encodings::MONO8;
+			Preprocessed_img.header.stamp = ros::Time::now();
+			Preprocessed_img.image = processed_frame;
 			
 			cv::findContours(processed_frame, ListContours, CV_RETR_LIST, CV_CHAIN_APPROX_NONE);
 			
@@ -102,7 +102,7 @@ class ImageConverter{
 			Detected_H.encoding = sensor_msgs::image_encodings::BGR8;
 			Detected_H.header.stamp = ros::Time::now();
 			Detected_H.image = frame;
-			image_pub_canny.publish(Canny.toImageMsg());
+			image_pub_preprocess.publish(Preprocessed_img.toImageMsg());
 			image_pub.publish(Detected_H.toImageMsg());
 			geometry_msgs::Point Position = findPose (Centre,nh,odom);
 			Pose_pub.publish(Position);
@@ -112,7 +112,7 @@ class ImageConverter{
 
 int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "threshold");
+  ros::init(argc, argv, "hdetect");
   ImageConverter ic;
   ros::spin();
   return 0;

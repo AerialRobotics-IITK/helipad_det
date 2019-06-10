@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-    <include file="$(find usb_cam)/launch/usb_cam-test.launch" />
-    <node pkg="helipad_det" type="hdetect" name="hdetect" output="screen" required="true">
-        <param name="low_threshold" type="int" value="100"/>
-        <param name="ratio" type="int" value="3"/>
-        <param name="kernel_size" type="int" value="3"/>
-    </node>
+    <group ns="hdetect"> 
+        <include file="$(find usb_cam)/launch/usb_cam-test.launch" />
+        <node pkg="helipad_det" type="hdetect" name="hdetect" output="screen" required="true">
+            <rosparam command="load" file="$(find helipad_det)/cfg/Params.yaml" />
+            <!-- <param name="low_threshold" type="int" value="100"/>
+            <param name="ratio" type="int" value="3"/>
+            <param name="kernel_size" type="int" value="3"/> -->
+        </node>
+    </group>
 </launch>
