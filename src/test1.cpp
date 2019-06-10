@@ -6,12 +6,18 @@
 
 int main(int argc, char** argv)
 {
+    double a,b,c,d,tolerance;
     ros::init(argc, argv, "test1");
     ros::NodeHandle param_get("~");
     int canny_lowThres, ratio, kernel_size, i;
     param_get.param("low_threshold", canny_lowThres, 50);
     param_get.param("ratio", ratio, 3);
     param_get.param("kernel_size", kernel_size, 3);
+    param_get.param("a",a,0.19);
+    param_get.param("b",b,0.04);
+    param_get.param("c",c,0.08);
+    param_get.param("d",d,0.08);
+    param_get.param("tolerance",tolerance,0.2);
     cv::Mat img = cv::imread("/home/tanay/catkin_ws/src/helipad_det/etc/Refined H2.jpg");
     cv::Size size = img.size();
     int type = img.type();
@@ -36,7 +42,7 @@ int main(int argc, char** argv)
         smooth(ListDistance.at(i), temp);
         graph(ListDistance.at(i), "Unrefined Graph");
         graph(temp, "Refined Graph");
-        if(isSimilar(temp)==1)
+        if(isSimilar(temp,a,b,c,d,tolerance)==1)
         {
             std::cout << "CHAAP-ED" << std::endl;
             centre(temp, ListContours.at(i), img_tmp);

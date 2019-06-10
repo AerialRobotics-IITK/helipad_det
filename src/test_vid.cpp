@@ -7,12 +7,18 @@
 
 int main(int argc, char** argv)
 {
+    double a,b,c,d,tolerance;
     ros::init(argc, argv, "test1");
     ros::NodeHandle nh;
     int canny_lowThres, ratio, kernel_size, i, count=0;
     nh.param("low_threshold", canny_lowThres, 100);
     nh.param("ratio", ratio), 3;
     nh.param("kernel_size", kernel_size, 3);
+    nh.param("a",a,0.19);
+    nh.param("b",b,0.19);
+    nh.param("c",c,0.19);
+    nh.param("d",d,0.19);
+    nh.param("tolerance",tolerance,0.19);
     cv::Mat frame, processed_frame;
     std::vector<std::vector<cv::Point> > ListContours;
     std::vector<double> Distances;
@@ -39,7 +45,7 @@ int main(int argc, char** argv)
             for(int j=0;j<Distances.size();j++)
                 Signature.push_back(0);            
             smooth(Distances, Signature);
-            if(isSimilar(Signature)==1)
+            if(isSimilar(Signature,a,b,c,d,tolerance)==1)
             {
                 count++;
                 std::cout << "CHAAP-ED" << count << std::endl;

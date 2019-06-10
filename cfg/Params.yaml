@@ -1,0 +1,34 @@
+low_threshold : 100
+ratio : 3
+kernel_size : 3
+a : 0.19
+b : 0.04
+c : 0.08
+d : 0.08
+tolerance : 0.05
+camera : 
+  translation :
+    x : 0
+    y : 0
+    z : 0
+
+image_width: 640
+image_height: 480
+camera_name: head_camera
+camera_matrix:
+  rows: 3
+  cols: 3
+  data: [575.8357775641182, 0, 304.5915536401063, 0, 579.0890363516307, 236.6503982296557, 0, 0, 1]
+distortion_model: plumb_bob
+distortion_coefficients:
+  rows: 1
+  cols: 5
+  data: [-0.1133007661635582, 0.1594946896698325, -0.0005342430392635209, 0.003218401667875472, 0]
+rectification_matrix:
+  rows: 3
+  cols: 3
+  data: [1, 0, 0, 0, 1, 0, 0, 0, 1]
+projection_matrix:
+  rows: 3
+  cols: 4
+  data: [566.55078125, 0, 307.024426241871, 0, 0, 572.1759033203125, 236.448690455818, 0, 0, 0, 1, 0]

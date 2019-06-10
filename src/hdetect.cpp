@@ -6,10 +6,18 @@
 #include <helipad_det/Preprocess.h>
 #include <helipad_det/Signature Processing.h>
 #include <helipad_det/Signature Matching.h>
+#include <helipad_det/PoseEstimation.h>
 
 int canny_lowThres;
 int ratio;
 int kernel_size;
+double a,b,c,d,tolerance;
+nav_msgs::Odometry odom;
+
+
+void odomCb(const nav_msgs::Odometry& msg){
+	odom = msg;
+}
 
 class ImageConverter{
 	ros::NodeHandle nh;
@@ -17,18 +25,27 @@ class ImageConverter{
 	image_transport::Subscriber image_sub;
 	image_transport::Publisher image_pub;
 	image_transport::Publisher image_pub_canny;
+	ros::Publisher Pose_pub;
 	ros::Publisher obj_pub;
+	ros::Subscriber Odom_sub;
 	cv::Mat frame, processed_frame, result;
 
 	public:
 	  	ImageConverter():it_(nh){  
 	     // Subscribe to input video feed and publish output video feed
 	    image_sub = it_.subscribe("usb_cam/image_raw", 1,&ImageConverter::imageCb, this);
+		Odom_sub = nh.subscribe("Odometry",100,odomCb);
 	    image_pub = it_.advertise("threshold_image", 1);
 	    image_pub_canny = it_.advertise("canny_image", 1);
-		nh.param("low_threshold", canny_lowThres, 50);
-		nh.param("ratio", ratio, 3);
-		nh.param("kernel_size", kernel_size, 3);
+		Pose_pub = nh.advertise<geometry_msgs::Point>("H_position",1);
+		nh.getParam("low_threshold", canny_lowThres);
+		nh.getParam("ratio", ratio);
+		nh.getParam("kernel_size", kernel_size);
+		nh.getParam("a",a);
+		nh.getParam("b",b);
+		nh.getParam("c",c);
+		nh.getParam("d",d);
+		nh.getParam("tolerance",tolerance);
 		}
 
 		~ImageConverter(){}
@@ -59,6 +76,7 @@ class ImageConverter{
 				Canny.header.stamp = ros::Time::now();
 				Canny.image = processed_frame;
 				cv::findContours(processed_frame, ListContours, CV_RETR_LIST, CV_CHAIN_APPROX_NONE);
+				cv::Point Centre;
 
 				for(i=0;i<ListContours.size();i++)
 				{
@@ -70,12 +88,13 @@ class ImageConverter{
 					for(int j=0;j<Distances.size();j++)
 							Signature.push_back(0);            
 					smooth(Distances, Signature);
-					if(isSimilar(Signature)==1)
+					if(isSimilar(Signature,a,b,c,d,tolerance)==1)
 					{
 						count++;
-						std::cout << "CHAAP-ED" << count << std::endl;
+						// std::cout << "CHAAP-ED" << count << std::endl;
 						cv::drawContours(frame, ListContours, i, cv::Scalar(255, 0, 255));
-						centre(Signature, ListContours.at(i), frame);
+						Centre = centre(Signature, ListContours.at(i), frame);
+						std::cout << Centre.x << " " << Centre.y << std::endl;
 						break;
 					}
 				}
@@ -86,7 +105,11 @@ class ImageConverter{
 				Detected_H.image = frame;
 				image_pub_canny.publish(Canny.toImageMsg());
 				image_pub.publish(Detected_H.toImageMsg());
-				cv::waitKey(30);
+				geometry_msgs::Point Position = findPose (Centre,nh,odom);
+				Pose_pub.publish(Position);
+				// std::cout << Position.x << Position.y << Position.z << std::endl;
+
+				// cv::waitKey(30);
 				ros::spinOnce();
 			// }
 		}

@@ -1,9 +1,7 @@
 #include <iostream>
 #include <math.h>
 
-int isSimilar(const std::vector<double>& ListSignatures){
-	double a = 0.19, b = 0.04, c = 0.08, d = 0.08;
-	double tolerance=0.2;
+int isSimilar(const std::vector<double>& ListSignatures,double a, double b, double c, double d, double tolerance){
 
 	int ListSignaturesSize = ListSignatures.size();
 
