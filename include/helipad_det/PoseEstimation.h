@@ -30,9 +30,9 @@ geometry_msgs::Point findPose(cv::Point centre,ros::NodeHandle nh,nav_msgs::Odom
     Eigen::Matrix3f rotQuadtoCam = quat.toRotationMatrix();
 
     float tCamX = 0, tCamY = 0, tCamZ = 0;
-    nh.getParam("/hdetect/camera/translation/x", tCamX);
-    nh.getParam("/hdetect/camera/translation/y", tCamY);
-    nh.getParam("/hdetect/camera/translation/z", tCamZ);
+    nh.getParam("/camera/translation/x", tCamX);
+    nh.getParam("/camera/translation/y", tCamY);
+    nh.getParam("/camera/translation/z", tCamZ);
 
     for(int i=0; i<4; i++)
     {

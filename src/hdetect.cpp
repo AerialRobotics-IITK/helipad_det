@@ -38,14 +38,14 @@ class ImageConverter{
 			image_pub = it_.advertise("Detected_H", 1);
 			image_pub_preprocess = it_.advertise("Preprocessed_image", 1);
 			Pose_pub = nh.advertise<geometry_msgs::Point>("H_position",1);
-			nh.getParam("hdetect/low_threshold", canny_lowThres);
-			nh.getParam("hdetect/ratio", ratio);
-			nh.getParam("hdetect/kernel_size", kernel_size);
-			nh.getParam("hdetect/a",a);
-			nh.getParam("hdetect/b",b);
-			nh.getParam("hdetect/c",c);
-			nh.getParam("hdetect/d",d);
-			nh.getParam("hdetect/tolerance",tolerance);
+			nh.getParam("low_threshold", canny_lowThres);
+			nh.getParam("ratio", ratio);
+			nh.getParam("kernel_size", kernel_size);
+			nh.getParam("a",a);
+			nh.getParam("b",b);
+			nh.getParam("c",c);
+			nh.getParam("d",d);
+			nh.getParam("tolerance",tolerance);
 		}
 
 		~ImageConverter(){}
