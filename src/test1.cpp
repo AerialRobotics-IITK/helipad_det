@@ -1,5 +1,5 @@
 #include <ros/ros.h>
-#include <helipad_det/Preprocess.h>
+#include <helipad_det/preprocess.h>
 #include <helipad_det/signProc.h>
 #include <helipad_det/signMatch.h>
 #include <opencv2/opencv.hpp>
