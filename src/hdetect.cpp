@@ -12,11 +12,11 @@ int canny_lowThres;
 int ratio;
 int kernel_size;
 double a,b,c,d,tolerance;
-// nav_msgs::Odometry odom;
+nav_msgs::Odometry odom;
 
-// void odomCb(const nav_msgs::Odometry& msg){
-// 	odom = msg;
-// }
+void odomCb(const nav_msgs::Odometry& msg){
+	odom = msg;
+}
 
 class ImageConverter{
 	private:
@@ -34,18 +34,18 @@ class ImageConverter{
 	  	ImageConverter():it_(nh){  
 			// Subscribe to input video feed and publish output video feed
 			image_sub = it_.subscribe("usb_cam/image_raw", 1,&ImageConverter::imageCb, this);
-			// Odom_sub = nh.subscribe("Odometry",100,odomCb);
+			Odom_sub = nh.subscribe("Odometry",100,odomCb);
 			image_pub = it_.advertise("Detected_H", 1);
 			image_pub_preprocess = it_.advertise("Preprocessed_image", 1);
 			Pose_pub = nh.advertise<geometry_msgs::Point>("H_position",1);
-			nh.getParam("low_threshold", canny_lowThres);
-			nh.getParam("ratio", ratio);
-			nh.getParam("kernel_size", kernel_size);
-			nh.getParam("a",a);
-			nh.getParam("b",b);
-			nh.getParam("c",c);
-			nh.getParam("d",d);
-			nh.getParam("tolerance",tolerance);
+			nh.getParam("hdetect/low_threshold", canny_lowThres);
+			nh.getParam("hdetect/ratio", ratio);
+			nh.getParam("hdetect/kernel_size", kernel_size);
+			nh.getParam("hdetect/a",a);
+			nh.getParam("hdetect/b",b);
+			nh.getParam("hdetect/c",c);
+			nh.getParam("hdetect/d",d);
+			nh.getParam("hdetect/tolerance",tolerance);
 		}
 
 		~ImageConverter(){}
@@ -103,8 +103,8 @@ class ImageConverter{
 			Detected_H.image = frame;
 			image_pub_preprocess.publish(Preprocessed_img.toImageMsg());
 			image_pub.publish(Detected_H.toImageMsg());
-			// geometry_msgs::Point Position = findPose (Centre,nh,odom);
-			// Pose_pub.publish(Position);
+			geometry_msgs::Point Position = findPose (Centre,nh,odom);
+			Pose_pub.publish(Position);
 			ros::spinOnce();
 		}
 };
