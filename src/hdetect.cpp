@@ -4,9 +4,9 @@
 #include <sensor_msgs/image_encodings.h>
 #include <opencv2/opencv.hpp>
 #include <helipad_det/preprocess.h>
-#include <helipad_det/signProc.h>
-#include <helipad_det/signMatch.h>
-#include <helipad_det/PoseEstimation.h>
+#include <helipad_det/signature_processing.h>
+#include <helipad_det/signature_matching.h>
+#include <helipad_det/pose_estimation.h>
 
 int canny_lowThres;
 int ratio;
