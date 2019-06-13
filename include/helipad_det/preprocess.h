@@ -1,7 +1,7 @@
 #include <opencv2/opencv.hpp>
 #include<ros/ros.h>
 
-cv::Mat Preprocess(const cv::Mat& img, int canny_lowThreshold, int canny_ratio, int canny_kernel_size){
+cv::Mat preprocess(const cv::Mat& img, int canny_lowThreshold, int canny_ratio, int canny_kernel_size){
     ROS_ASSERT(img.empty()!=true);
 
     cv::Mat gray, blur, result;
