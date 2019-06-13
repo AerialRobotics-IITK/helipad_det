@@ -219,7 +219,7 @@ void graph(const std::vector<double>& signature, cv::String str){
     cv::destroyAllWindows();
 }
 
-void Retrace(const std::vector<double>& Signature, const std::vector<cv::Point>& Contour, cv::Mat img){
+void retrace(const std::vector<double>& Signature, const std::vector<cv::Point>& Contour, cv::Mat img){
     for(int i=0;i<Signature.size();i++)
         if(Signature.at(i)!=0)
             cv::circle(img, Contour.at(i), 5, cv::Scalar(0, 0, 255));

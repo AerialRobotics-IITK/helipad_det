@@ -1,6 +1,3 @@
-#include <iostream>
-#include <math.h>
-
 int isSimilar(std::vector<double>& ListSignatures, double a, double b, double c, double d, double tolerance){
 	
 	int ListSignaturesSize = ListSignatures.size();
@@ -8,7 +5,7 @@ int isSimilar(std::vector<double>& ListSignatures, double a, double b, double c,
 
 	for (int i=0;i<ListSignaturesSize;i++){
 		if (ListSignatures.at(i)==0) continue;
-		else {
+		else{
 			int ZeroLength=0;
 			while (i+1+ZeroLength <= ListSignaturesSize-1 && ListSignatures.at(i+1+ZeroLength)==0)
 				ZeroLength++;
@@ -16,7 +13,7 @@ int isSimilar(std::vector<double>& ListSignatures, double a, double b, double c,
 			if (abs(ZeroLength+2-a*ListSignaturesSize) < (tolerance*ListSignaturesSize)){//
 				StartIndex=i;
 				break;
-			} 
+			}
 		}
 	}
 
@@ -26,18 +23,27 @@ int isSimilar(std::vector<double>& ListSignatures, double a, double b, double c,
 
 	int Segments[12];
 	int CountSegments=0;
-	for (int i=StartIndex;i<ListSignaturesSize;i++) UpdatedListSignatures.push_back(ListSignatures.at(i));
-	for (int i=0;i<StartIndex;i++) UpdatedListSignatures.push_back(ListSignatures.at(i));
+
+	for(int i=StartIndex;i<ListSignaturesSize;i++)
+		UpdatedListSignatures.push_back(ListSignatures.at(i));
+	for(int i=0;i<StartIndex;i++)
+		UpdatedListSignatures.push_back(ListSignatures.at(i));\
+
 	int Length;
 
-	for (int i=0;i<ListSignaturesSize;i++){
-		if (UpdatedListSignatures.at(i)==0) continue;
-		if (CountSegments > 11) return 0;
+	for(int i=0;i<ListSignaturesSize;i++){
+		if (UpdatedListSignatures.at(i)==0)
+			continue;
+		if (CountSegments > 11)
+			return 0;
+		
 		Length=0;
+		
 		while ((i+1+Length) <= ListSignaturesSize-1 && UpdatedListSignatures.at(i+1+Length)==0)
 		{
 			Length++;
 		}
+		
 		i = i+Length-1;
 		Segments[CountSegments]=Length+2;
 		CountSegments++;
