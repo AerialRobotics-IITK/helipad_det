@@ -1,5 +1,6 @@
+#ifndef HELIPAD_DET_SIGNATURE_PROCESSING_H
+#define HELIPAD_DET_SIGNATURE_PROCESSING_H
 
-void graph(const std::vector<double>&, cv::String);
 
 double crossProduct(cv::Point point, cv::Point line_start, cv::Point line_end){
    return fabs((point.x - line_start.x) * (line_end.y - line_start.y) - (point.y - line_start.y) * (line_end.x - line_start.x)) ;   
@@ -241,3 +242,5 @@ cv::Point centre(const std::vector<double>& Signature, const std::vector<cv::Poi
     cv::circle(img, cv::Point(x0, y0), 3, cv::Scalar(255, 0, 0), -1);
     return cv::Point(x0, y0);
 }
+
+#endif

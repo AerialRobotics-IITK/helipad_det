@@ -1,3 +1,6 @@
+#ifndef HELIPAD_DET_SIGNATURE_MATCHING_H
+#define HELIPAD_DET_SIGNATURE_MATCHING_H
+
 int isSimilar(std::vector<double>& ListSignatures, double a, double b, double c, double d, double tolerance){
 	
 	int ListSignaturesSize = ListSignatures.size();
@@ -27,7 +30,7 @@ int isSimilar(std::vector<double>& ListSignatures, double a, double b, double c,
 	for(int i=StartIndex;i<ListSignaturesSize;i++)
 		UpdatedListSignatures.push_back(ListSignatures.at(i));
 	for(int i=0;i<StartIndex;i++)
-		UpdatedListSignatures.push_back(ListSignatures.at(i));\
+		UpdatedListSignatures.push_back(ListSignatures.at(i));
 
 	int Length;
 
@@ -67,3 +70,5 @@ int isSimilar(std::vector<double>& ListSignatures, double a, double b, double c,
 
 	return 1;
 }
+
+#endif

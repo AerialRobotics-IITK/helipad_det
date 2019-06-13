@@ -1,11 +1,5 @@
-#include <ros/ros.h>
-#include <geometry_msgs/PoseStamped.h>
-#include <nav_msgs/Odometry.h>
-#include <Eigen/Dense>
-#include <Eigen/Core>
-#include <tf/LinearMath/Quaternion.h>
-#include <geometry_msgs/Point.h>
-#include <opencv2/opencv.hpp>
+#ifndef HELIPAD_DET_POSE_ESTIMATION_H
+#define HELIPAD_DET_POSE_ESTIMATION_H
 
 geometry_msgs::Point findPose(cv::Point centre,ros::NodeHandle nh,nav_msgs::Odometry odom)
 {
@@ -87,3 +81,5 @@ geometry_msgs::Point findPose(cv::Point centre,ros::NodeHandle nh,nav_msgs::Odom
 
     return temp;
 }
+
+#endif

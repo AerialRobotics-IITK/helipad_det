@@ -1,43 +1,37 @@
-#include <ros/ros.h>
-#include <image_transport/image_transport.h>
-#include <cv_bridge/cv_bridge.h>
-#include <sensor_msgs/image_encodings.h>
-#include <opencv2/opencv.hpp>
 #include <helipad_det/preprocess.h>
 #include <helipad_det/signature_processing.h>
 #include <helipad_det/signature_matching.h>
 #include <helipad_det/pose_estimation.h>
 
-int canny_lowThres;
-int ratio;
-int kernel_size;
-double a,b,c,d,tolerance;
-nav_msgs::Odometry odom;
-
-void odomCb(const nav_msgs::Odometry& msg){
-	odom = msg;
-}
-
-class ImageConverter{
+class HelipadDetector{
 	private:
 		ros::NodeHandle nh;
+		ros::Publisher pose_pub;
+		ros::Subscriber odom_sub;
+
 		image_transport::ImageTransport it_;
 		image_transport::Subscriber image_sub;
 		image_transport::Publisher image_pub;
 		image_transport::Publisher image_pub_preprocess;
-		ros::Publisher Pose_pub;
-		ros::Publisher obj_pub;
-		ros::Subscriber Odom_sub;
+
+		int canny_lowThres, ratio, kernel_size;
+		double a, b, c, d, tolerance;
+
+		nav_msgs::Odometry odom;
+
 		cv::Mat frame, processed_frame, result;
 	
 	public:
-	  	ImageConverter():it_(nh){  
+	  	HelipadDetector():it_(nh){  
 			// Subscribe to input video feed and publish output video feed
-			image_sub = it_.subscribe("usb_cam/image_raw", 1,&ImageConverter::imageCb, this);
-			Odom_sub = nh.subscribe("odometry",1,odomCb);
-			image_pub = it_.advertise("Detected_H", 1);
-			image_pub_preprocess = it_.advertise("Preprocessed_image", 1);
-			Pose_pub = nh.advertise<geometry_msgs::Point>("H_position",1);
+
+			// odom_sub = nh.subscribe("odometry", 1, &HelipadDetector::odomCb, this);
+			image_sub = it_.subscribe("usb_cam/image_raw", 1, &HelipadDetector::imageCb, this);
+
+			image_pub = it_.advertise("detected_helipad", 1);
+			image_pub_preprocess = it_.advertise("preprocessed_image", 1);
+			pose_pub = nh.advertise<geometry_msgs::Point>("helipad_position", 1);
+
 			nh.getParam("hdetect/low_threshold", canny_lowThres);
 			nh.getParam("hdetect/ratio", ratio);
 			nh.getParam("hdetect/kernel_size", kernel_size);
@@ -48,7 +42,11 @@ class ImageConverter{
 			nh.getParam("hdetect/tolerance",tolerance);
 		}
 
-		~ImageConverter(){}
+		~HelipadDetector(){}
+		
+		void odomCb(const nav_msgs::Odometry& msg){
+			odom = msg;
+		}
 
   		void imageCb(const sensor_msgs::ImageConstPtr& msg){
 			cv_bridge::CvImagePtr cv_ptr;
@@ -63,36 +61,42 @@ class ImageConverter{
 
 			frame=cv_ptr->image;
 			ROS_ASSERT(frame.empty()!=true);
+
 			int i;
-			std::vector<std::vector<cv::Point> > ListContours;
-			std::vector<double> Distances;
-			std::vector<double> Signature;
+
+			std::vector<std::vector<cv::Point> > list_contours;
+			std::vector<double> distances;
+			std::vector<double> signature;
 
 			processed_frame = preprocess(frame, canny_lowThres, ratio, kernel_size);
 			
-			cv_bridge::CvImage Preprocessed_img;
-			Preprocessed_img.encoding = sensor_msgs::image_encodings::MONO8;
-			Preprocessed_img.header.stamp = ros::Time::now();
-			Preprocessed_img.image = processed_frame;
-			
-			cv::findContours(processed_frame, ListContours, CV_RETR_LIST, CV_CHAIN_APPROX_NONE);
+			cv_bridge::CvImage preprocessed_img;
+			preprocessed_img.encoding = sensor_msgs::image_encodings::MONO8;
+			preprocessed_img.header.stamp = ros::Time::now();
+			preprocessed_img.image = processed_frame;
+			image_pub_preprocess.publish(preprocessed_img.toImageMsg());
+
+			cv::findContours(processed_frame, list_contours, CV_RETR_LIST, CV_CHAIN_APPROX_NONE);
 			
 			cv::Point Centre;
 
-			for(i=0;i<ListContours.size();i++)
+			for(i=0;i<list_contours.size();i++)
 			{
-				if(cv::contourArea(ListContours.at(i)) < 0.01*frame.size().area())
+				if(cv::contourArea(list_contours.at(i)) < 0.01*frame.size().area())
 						continue;
-				Distances.clear();
-				Signature.clear();
-				pointToLineDistance(ListContours.at(i), Distances);
-				for(int j=0;j<Distances.size();j++)
-						Signature.push_back(0);            
-				smooth(Distances, Signature);
-				if(isSimilar(Signature,a,b,c,d,tolerance)==1)
+				
+				distances.clear();
+				signature.clear();
+
+				pointToLineDistance(list_contours.at(i), distances);        
+				smooth(distances, signature);
+				
+				if(isSimilar(signature,a,b,c,d,tolerance)==1)
+				{
 					// std::cout << odom.pose.pose.position.z << " " << odom.pose.pose.orientation.w << std::endl;	{
-					cv::drawContours(frame, ListContours, i, cv::Scalar(255, 0, 255));
-					Centre = centre(Signature, ListContours.at(i), frame);
+					cv::drawContours(frame, list_contours, i, cv::Scalar(255, 0, 255));
+					Centre = centre(signature, list_contours.at(i), frame);
+					// pose_pub.publish(findPose(Centre, nh, odom));
 					break;
 				}
 			}
@@ -100,18 +104,14 @@ class ImageConverter{
 			Detected_H.encoding = sensor_msgs::image_encodings::BGR8;
 			Detected_H.header.stamp = ros::Time::now();
 			Detected_H.image = frame;
-			image_pub_preprocess.publish(Preprocessed_img.toImageMsg());
 			image_pub.publish(Detected_H.toImageMsg());
-			geometry_msgs::Point Position = findPose (Centre,nh,odom);
-			Pose_pub.publish(Position);
-			ros::spinOnce();
 		}
 };
 
 int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "hdetect");
- 			// std::cout << odom.pose.pose.position.z << " " << odom.pose.pose.orientation.w << std::endl;
- 			// std::cout << odom.pose.pose.position.z << " " << odom.pose.pose.orientation.w << std::endl;
- 			// std::cout << odom.pose.pose.position.z << " " << odom.pose.pose.orientation.w << std::endl;
-}			// std::cout << odom.pose.pose.position.z << " " << odom.pose.pose.orientation.w << std::endl;
+	ros::init(argc, argv, "hdetect");
+  	HelipadDetector hd;
+  	ros::spin();
+	return 0;
+}
