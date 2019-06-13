@@ -24,7 +24,7 @@ int main(int argc, char** argv)
     cv::Mat img = cv::imread("/home/tanay/catkin_ws/src/helipad_det/etc/Refined H2.jpg");
     ROS_ASSERT(img.empty()!=true);
 
-    cv::Mat prepro_img = Preprocess(img, canny_lowThres, ratio, kernel_size);
+    cv::Mat prepro_img = preprocess(img, canny_lowThres, ratio, kernel_size);
     cv::imshow("Preprocessed Image", prepro_img);
     cv::waitKey(0);
     cv::destroyAllWindows();

@@ -68,7 +68,7 @@ class ImageConverter{
 			std::vector<double> Distances;
 			std::vector<double> Signature;
 
-			processed_frame = Preprocess(frame, canny_lowThres, ratio, kernel_size);
+			processed_frame = preprocess(frame, canny_lowThres, ratio, kernel_size);
 			
 			cv_bridge::CvImage Preprocessed_img;
 			Preprocessed_img.encoding = sensor_msgs::image_encodings::MONO8;

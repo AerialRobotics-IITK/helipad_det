@@ -34,7 +34,7 @@ int main(int argc, char** argv)
     {
         cap >> frame;
         ROS_ASSERT(frame.empty()!=true);
-        processed_frame = Preprocess(frame, canny_lowThres, ratio, kernel_size);
+        processed_frame = preprocess(frame, canny_lowThres, ratio, kernel_size);
         cv::imshow("Preprocessed Frame", processed_frame);
         cv::findContours(processed_frame, ListContours, CV_RETR_LIST, CV_CHAIN_APPROX_NONE);
 
