@@ -1,57 +1,53 @@
-#include <ros/ros.h>
-#include <opencv2/opencv.hpp>
-#include <math.h>
-#include <iostream>
 
 void graph(const std::vector<double>&, cv::String);
 
-double cross_product( cv::Point point,cv::Point line_start, cv::Point line_end){
+double crossProduct(cv::Point point, cv::Point line_start, cv::Point line_end){
    return fabs((point.x - line_start.x) * (line_end.y - line_start.y) - (point.y - line_start.y) * (line_end.x - line_start.x)) ;   
 }
 
-double baseLength(cv::Point line_end,cv::Point line_start){
+double baseLength(cv::Point line_end, cv::Point line_start){
     return cv::norm(line_end - line_start);
 }
 
 void pointToLineDistance(const std::vector<cv::Point>& contour, std::vector<double>& distances){
-    int n = round(contour.size()/(26*3));
+    int n = round((double) contour.size()/(26*3));
     for(int i=0; i< contour.size();i++){
         if(i-n>=0 && i+n<contour.size())
-            distances.push_back(cross_product(contour[i],contour[i-n],contour[i+n])/baseLength(contour[i+n],contour[i-n]));
+            distances.push_back(crossProduct(contour.at(i),contour.at(i-n),contour.at(i+n))/baseLength(contour.at(i+n),contour.at(i-n)));
         else if(i-n<0 && i+n<contour.size())
-            distances.push_back(cross_product(contour[i],contour[i-n + contour.size()],contour[i+n])/baseLength(contour[i+n],contour[i-n + contour.size()]));
+            distances.push_back(crossProduct(contour.at(i),contour.at(i-n + contour.size()),contour.at(i+n))/baseLength(contour.at(i+n),contour.at(i-n + contour.size())));
         else if(i-n>=0 && i+n>=contour.size())
-            distances.push_back(cross_product(contour[i],contour[i-n],contour[i+n-contour.size()])/baseLength(contour[i+n-contour.size()],contour[i-n]));
+            distances.push_back(crossProduct(contour.at(i),contour.at(i-n),contour.at(i+n-contour.size()))/baseLength(contour.at(i+n-contour.size()),contour.at(i-n)));
     }
     return;
 }
 
-void smooth(const std::vector<double>& input, std::vector<double>& output){
-    ROS_ASSERT(input.size()==output.size());
-    int i, size=input.size();
+void smooth(const std::vector<double>& distances, std::vector<double>& signature){
+    int i, size=distances.size();
     
-    for(i=0;i<output.size();i++)
-        output[i]=0;
+    for(i=0;i<size;i++)
+        signature.push_back(0);
 
-    if(input[0]>=input[1] && input[0]>=input[input.size()-1] && input[0]>=0.002*input.size())
-        output[0]=input[0];
+    if(distances.at(0)>=distances.at(1) && distances.at(0)>=distances.at(size-1) && distances.at(0)>=0.002*size)
+        signature.at(0)=distances.at(0);
 
-    if(input[input.size()-1]>=input[input.size()-2] && input[input.size()-1]>=input[0] && input[input.size()-1]>=0.002*input.size())
-        output[input.size()-1]=input[input.size()-1];
+    if(distances.at(size-1)>=distances.at(size-2) && distances.at(size-1)>=distances.at(0) && distances.at(size-1)>=0.002*size)
+        signature.at(size-1)=distances.at(size-1);
 
-    for(i=1;i<input.size()-1;i++)
+    for(i=1;i<size-1;i++)
     {
-        if(input[i]>=input[i+1] && input[i]>=input[i-1] && input[i]>=0.002*input.size())
-            output[i]=input[i];
+        if(distances.at(i)>=distances.at(i+1) && distances.at(i)>=distances.at(i-1) && distances.at(i)>=0.002*size)
+            signature.at(i)=distances.at(i);
         else
-            output[i]=0;
+            signature.at(i)=0;
     }
     
-    int n=round(input.size()/(26*3));
+    int n=round((double)size/(26*3));
     int x0=0, y0=0;
+
     for(i = 0;i<n;i++)
     {
-        if(output.at(i)==0)
+        if(signature.at(i)==0)
             continue;
         else
         {
@@ -59,39 +55,39 @@ void smooth(const std::vector<double>& input, std::vector<double>& output){
             y0 = 0;
             for(int j=size-n+i;j<size;j++)//Handling cases at the end of the vector
             {
-                if(output.at(j)==0)
+                if(signature.at(j)==0)
                     continue;
                 else
                 {
-                    if(output.at(j)>y0)
+                    if(signature.at(j)>y0)
                     {
                         x0=j;
-                        y0=output.at(j);
+                        y0=signature.at(j);
                     }
-                    output.at(j)=0;
+                    signature.at(j)=0;
                 }
             }
             for(int j=0;j<=n+i;j++)//Handling cases at the start of the vector
             {
-                if(output.at(j)==0)
+                if(signature.at(j)==0)
                     continue;
                 else
                 {
-                    if(output.at(j)>y0)
+                    if(signature.at(j)>y0)
                     {
                         x0=j;
-                        y0=output.at(j);
+                        y0=signature.at(j);
                     }
-                    output.at(j)=0;
+                    signature.at(j)=0;
                 }
             }
-            output.at(x0)=y0;
+            signature.at(x0)=y0;
         }
     }
 
-    for(i = n;i<output.size()-n;i++)
+    for(i = n;i<size-n;i++)
     {
-        if(output.at(i)==0)
+        if(signature.at(i)==0)
             continue;
         else
         {
@@ -99,25 +95,25 @@ void smooth(const std::vector<double>& input, std::vector<double>& output){
             y0 = 0;
             for(int j=i-n;j<=i+n;j++)
             {
-                if(output.at(j)==0)
+                if(signature.at(j)==0)
                     continue;
                 else
                 {
-                    if(output.at(j)>y0)
+                    if(signature.at(j)>y0)
                     {
                         x0=j;
-                        y0=output.at(j);
+                        y0=signature.at(j);
                     }
-                    output.at(j)=0;
+                    signature.at(j)=0;
                 }
             }
-            output.at(x0)=y0;
+            signature.at(x0)=y0;
         }
     }
 
     for(i = size-n;i<size;i++)
     {
-        if(output.at(i)==0)
+        if(signature.at(i)==0)
             continue;
         else
         {
@@ -125,33 +121,33 @@ void smooth(const std::vector<double>& input, std::vector<double>& output){
             y0 = 0;
             for(int j=i-n;j<size;j++)//Handling cases at the end of the vector
             {
-                if(output.at(j)==0)
+                if(signature.at(j)==0)
                     continue;
                 else
                 {
-                    if(output.at(j)>y0)
+                    if(signature.at(j)>y0)
                     {
                         x0=j;
-                        y0=output.at(j);
+                        y0=signature.at(j);
                     }
-                    output.at(j)=0;
+                    signature.at(j)=0;
                 }
             }
             for(int j=0;j<=n+i-size;j++)//Handling cases at the start of the vector
             {
-                if(output.at(j)==0)
+                if(signature.at(j)==0)
                     continue;
                 else
                 {
-                    if(output.at(j)>y0)
+                    if(signature.at(j)>y0)
                     {
                         x0=j;
-                        y0=output.at(j);
+                        y0=signature.at(j);
                     }
-                    output.at(j)=0;
+                    signature.at(j)=0;
                 }
             }
-            output.at(x0)=y0;
+            signature.at(x0)=y0;
         }
     }
 }
@@ -229,7 +225,7 @@ void Retrace(const std::vector<double>& Signature, const std::vector<cv::Point>&
             cv::circle(img, Contour.at(i), 5, cv::Scalar(0, 0, 255));
 }
 
-cv::Point centre(const std::vector<double>& Signature, const std::vector<cv::Point> Contour, cv::Mat img){
+cv::Point centre(const std::vector<double>& Signature, const std::vector<cv::Point>& Contour, cv::Mat img){
     int x0=0, y0=0, count=0;
     for(int i=0;i<Signature.size();i++)
     {
