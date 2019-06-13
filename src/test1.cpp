@@ -1,64 +1,67 @@
 #include <ros/ros.h>
 #include <helipad_det/preprocess.h>
-#include <helipad_det/signProc.h>
+#include <helipad_det/signature_processing.h>
 #include <helipad_det/signMatch.h>
 #include <opencv2/opencv.hpp>
 
 int main(int argc, char** argv)
 {
-    double a,b,c,d,tolerance;
     ros::init(argc, argv, "test1");
     ros::NodeHandle param_get("~");
+
+    double a,b,c,d,tolerance;
     int canny_lowThres, ratio, kernel_size, i;
-    param_get.param("low_threshold", canny_lowThres, 50);
+
+    param_get.param("low_threshold", canny_lowThres, 80);
     param_get.param("ratio", ratio, 3);
     param_get.param("kernel_size", kernel_size, 3);
-    param_get.param("a",a,0.19);
-    param_get.param("b",b,0.04);
-    param_get.param("c",c,0.08);
-    param_get.param("d",d,0.08);
-    param_get.param("tolerance",tolerance,0.2);
+    param_get.param("a", a, 0.19);
+    param_get.param("b", b, 0.04);
+    param_get.param("c", c, 0.08);
+    param_get.param("d", d, 0.08);
+    param_get.param("tolerance", tolerance, 0.05);
+
     cv::Mat img = cv::imread("/home/tanay/catkin_ws/src/helipad_det/etc/Refined H2.jpg");
-    cv::Size size = img.size();
-    int type = img.type();
     ROS_ASSERT(img.empty()!=true);
-    // cv::imshow("img", img);
+
     cv::Mat prepro_img = Preprocess(img, canny_lowThres, ratio, kernel_size);
     cv::imshow("Preprocessed Image", prepro_img);
     cv::waitKey(0);
     cv::destroyAllWindows();
+
     std::vector<std::vector<cv::Point> > ListContours;
 
     cv::findContours(prepro_img, ListContours, CV_RETR_TREE, CV_CHAIN_APPROX_NONE);
-	std::vector<std::vector<double> > ListDistance(ListContours.size());
+
+    std::vector<double> Distances;
+    std::vector<double> Signature;
+
     for(i=0;i<ListContours.size();i++)
     {
         if(cv::contourArea(ListContours.at(i)) < 0.01*img.size().area())
             continue;
-        cv::Mat img_tmp = cv::Mat::zeros(size, type);
-        pointToLineDistance(ListContours.at(i), ListDistance.at(i));
-        std::vector<double> temp(ListDistance.at(i).size());
-        std::cout << ListContours.at(i).size() << std::endl ;
-        smooth(ListDistance.at(i), temp);
-        graph(ListDistance.at(i), "Unrefined Graph");
-        graph(temp, "Refined Graph");
-        if(isSimilar(temp,a,b,c,d,tolerance)==1)
-        {
-            std::cout << "CHAAP-ED" << std::endl;
-            centre(temp, ListContours.at(i), img_tmp);
-        }
-        cv::drawContours(img_tmp, ListContours, i, cv::Scalar(255, 0, 255));
-        Retrace(temp, ListContours.at(i), img_tmp);
-        cv::imshow("contours", img_tmp);
+
+        Distances.clear();
+        Signature.clear();
+
+        pointToLineDistance(ListContours.at(i), Distances);
+        smooth(Distances, Signature);
+
+        graph(Distances, "Unrefined Graph");
+        graph(Signature, "Refined Graph");
+
+        if(isSimilar(Signature, a, b, c, d, tolerance))
+            centre(Signature, ListContours.at(i), img);
+        cv::drawContours(img, ListContours, i, cv::Scalar(255, 0, 255));
+        retrace(Signature, ListContours.at(i), img);
+        cv::imshow("contours", img);
 
         if((char)cv::waitKey(0)=='q')
             return -1;
         cv::destroyAllWindows();
-        ros::spinOnce();
-        // for(int j=0;j<temp.size();j++)
-        //     std::cout << temp.at(j) << std::endl;
-        // std::cout << std::endl << std::endl;
     }
-    std::cout << size.area() << std::endl ;
+
+    std::cout << img.size().area() << std::endl ;
+
     return 0;
 }
