@@ -34,7 +34,7 @@ class ImageConverter{
 	  	ImageConverter():it_(nh){  
 			// Subscribe to input video feed and publish output video feed
 			image_sub = it_.subscribe("usb_cam/image_raw", 1,&ImageConverter::imageCb, this);
-			Odom_sub = nh.subscribe("Odometry",100,odomCb);
+			Odom_sub = nh.subscribe("odometry",1,odomCb);
 			image_pub = it_.advertise("Detected_H", 1);
 			image_pub_preprocess = it_.advertise("Preprocessed_image", 1);
 			Pose_pub = nh.advertise<geometry_msgs::Point>("H_position",1);
@@ -90,10 +90,9 @@ class ImageConverter{
 						Signature.push_back(0);            
 				smooth(Distances, Signature);
 				if(isSimilar(Signature,a,b,c,d,tolerance)==1)
-				{
+					// std::cout << odom.pose.pose.position.z << " " << odom.pose.pose.orientation.w << std::endl;	{
 					cv::drawContours(frame, ListContours, i, cv::Scalar(255, 0, 255));
 					Centre = centre(Signature, ListContours.at(i), frame);
-					std::cout << Centre.x << " " << Centre.y << std::endl;
 					break;
 				}
 			}
@@ -112,7 +111,7 @@ class ImageConverter{
 int main(int argc, char** argv)
 {
   ros::init(argc, argv, "hdetect");
-  ImageConverter ic;
-  ros::spin();
-  return 0;
-}
+ 			// std::cout << odom.pose.pose.position.z << " " << odom.pose.pose.orientation.w << std::endl;
+ 			// std::cout << odom.pose.pose.position.z << " " << odom.pose.pose.orientation.w << std::endl;
+ 			// std::cout << odom.pose.pose.position.z << " " << odom.pose.pose.orientation.w << std::endl;
+}			// std::cout << odom.pose.pose.position.z << " " << odom.pose.pose.orientation.w << std::endl;

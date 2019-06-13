@@ -9,6 +9,7 @@
 
 geometry_msgs::Point findPose(cv::Point centre,ros::NodeHandle nh,nav_msgs::Odometry odom)
 {
+    while (odom.pose.pose.position.z == 0) ros::spinOnce();
     cv::Mat intrinsic = cv::Mat_<double>(3, 3);
 
     Eigen::Matrix3f camMatrix, invCamMatrix, camToQuad, quadToCam;
@@ -32,7 +33,7 @@ geometry_msgs::Point findPose(cv::Point centre,ros::NodeHandle nh,nav_msgs::Odom
     {
         tCam(i) = tempList[i];
     }
-
+    
     nh.getParam("hdetect/camera/rotation", tempList);
     tempIdx = 0;
     for (int i = 0; i < 3; i++)
@@ -75,7 +76,9 @@ geometry_msgs::Point findPose(cv::Point centre,ros::NodeHandle nh,nav_msgs::Odom
 
     Eigen::Vector3f imgVec(centre.x, centre.y, 1);
     Eigen::Vector3f quadCoord = camToQuad * scaleUp * invCamMatrix * imgVec;
+
     quadCoord = quadCoord + tCam;
+    std::cout << quadCoord << std::endl << std::endl;
 
     Eigen::Vector3f globCoord = quadToGlob * quadCoord;
     temp.x = globCoord(0) + odom.pose.pose.position.x;
