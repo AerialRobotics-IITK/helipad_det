@@ -15,7 +15,7 @@ class HelipadDetector{
 		image_transport::Publisher image_pub_preprocess;
 
 		int canny_lowThres, ratio, kernel_size;
-		double a, b, c, d, tolerance;
+		double a, b, c, d, signature_tolerance, area_tolerance;
 
 		nav_msgs::Odometry odom;
 
@@ -39,7 +39,8 @@ class HelipadDetector{
 			nh.getParam("b",b);
 			nh.getParam("c",c);
 			nh.getParam("d",d);
-			nh.getParam("tolerance",tolerance);
+			nh.getParam("signature_tolerance",signature_tolerance);
+			nh.getParam("area_tolerance",area_tolerance);
 		}
 
 		~HelipadDetector(){}
@@ -82,16 +83,16 @@ class HelipadDetector{
 
 			for(i=0;i<list_contours.size();i++)
 			{
-				if(cv::contourArea(list_contours.at(i)) < 0.01*frame.size().area())
+				if(cv::contourArea(list_contours.at(i)) < area_tolerance*frame.size().area())
 						continue;
 				
 				distances.clear();
 				signature.clear();
 
-				pointToLineDistance(list_contours.at(i), distances);        
+				pointToLineDistance(list_contours.at(i), distances, b);        
 				smooth(distances, signature);
 				
-				if(isSimilar(signature,a,b,c,d,tolerance)==1)
+				if(isSimilar(signature,a,b,c,d,signature_tolerance)==1)
 				{
 					// std::cout << odom.pose.pose.position.z << " " << odom.pose.pose.orientation.w << std::endl;	{
 					cv::drawContours(frame, list_contours, i, cv::Scalar(255, 0, 255));

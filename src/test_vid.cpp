@@ -9,7 +9,7 @@ int main(int argc, char** argv)
     ros::init(argc, argv, "test_vid");  
     ros::NodeHandle nh;
 
-    double a,b,c,d,tolerance;
+    double a,b,c,d,signature_tolerance, area_tolerance;
     int canny_lowThres, ratio, kernel_size, i, count=0;
     
     nh.param("low_threshold", canny_lowThres, 100);
@@ -20,7 +20,9 @@ int main(int argc, char** argv)
     nh.param("b", b, 0.04);
     nh.param("c", c, 0.08);
     nh.param("d", d, 0.08);
-    nh.param("tolerance", tolerance, 0.05);
+    nh.param("signature_tolerance", signature_tolerance, 0.05);
+    nh.param("area_tolerance", area_tolerance, 0.05);
+
 
     cv::Mat frame, processed_frame;
     std::vector<std::vector<cv::Point> > ListContours;
@@ -42,16 +44,16 @@ int main(int argc, char** argv)
 
         for(i=0;i<ListContours.size();i++)
         {
-            if(cv::contourArea(ListContours.at(i)) < 0.01*frame.size().area())
+            if(cv::contourArea(ListContours.at(i)) < area_tolerance*frame.size().area())
                 continue;
 
             Distances.clear();
             Signature.clear();
 
-            pointToLineDistance(ListContours.at(i), Distances);          
+            pointToLineDistance(ListContours.at(i), Distances, b);          
             smooth(Distances, Signature);
 
-            if(isSimilar(Signature, a, b, c, d, tolerance))
+            if(isSimilar(Signature, a, b, c, d, signature_tolerance))
             {
                 count++;
                 std::cout << "CHAAP-ED" << count << std::endl;
