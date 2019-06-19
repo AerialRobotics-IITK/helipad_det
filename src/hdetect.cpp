@@ -44,7 +44,6 @@ class HelipadDetector{
 			nh_private.getParam("d", d);
 			nh_private.getParam("signature_tolerance", signature_tolerance);
 			nh_private.getParam("area_tolerance", area_tolerance);
-			std::cout << a << std::endl;
 		}
 
 		~HelipadDetector(){}
