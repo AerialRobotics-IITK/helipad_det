@@ -12,6 +12,7 @@ area_tolerance : 0.01
 
 camera : 
   translation : [0, 0, 0]
+  rotation : [0, -1, 0, -1, 0, 0, 0, 0, -1]
 
 image_width: 640
 image_height: 480

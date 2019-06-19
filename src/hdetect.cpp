@@ -5,11 +5,14 @@
 
 class HelipadDetector{
 	private:
-		ros::NodeHandle nh;
+		ros::NodeHandle nh_private;
+		ros::NodeHandle nh_public;
+		image_transport::ImageTransport it_private;
+		image_transport::ImageTransport it_public;
+
 		ros::Publisher pose_pub;
 		ros::Subscriber odom_sub;
 
-		image_transport::ImageTransport it_;
 		image_transport::Subscriber image_sub;
 		image_transport::Publisher image_pub;
 		image_transport::Publisher image_pub_preprocess;
@@ -22,25 +25,26 @@ class HelipadDetector{
 		cv::Mat frame, processed_frame, result;
 	
 	public:
-	  	HelipadDetector():it_(nh){  
+	  	HelipadDetector():nh_private("~"), it_private(nh_private), nh_public(), it_public(nh_public){  
 			// Subscribe to input video feed and publish output video feed
 
-			// odom_sub = nh.subscribe("odometry", 1, &HelipadDetector::odomCb, this);
-			image_sub = it_.subscribe("usb_cam/image_raw", 1, &HelipadDetector::imageCb, this);
+			odom_sub = nh_public.subscribe("odometry", 1, &HelipadDetector::odomCb, this);
+			image_sub = it_public.subscribe("usb_cam/image_raw", 1, &HelipadDetector::imageCb, this);
 
-			image_pub = it_.advertise("detected_helipad", 1);
-			image_pub_preprocess = it_.advertise("preprocessed_image", 1);
-			pose_pub = nh.advertise<geometry_msgs::Point>("helipad_position", 1);
+			image_pub = it_private.advertise("detected_helipad", 1);
+			image_pub_preprocess = it_private.advertise("preprocessed_image", 1);
+			pose_pub = nh_private.advertise<geometry_msgs::Point>("helipad_position", 1);
 
-			nh.getParam("low_threshold", canny_lowThres);
-			nh.getParam("ratio", ratio);
-			nh.getParam("kernel_size", kernel_size);
-			nh.getParam("a",a);
-			nh.getParam("b",b);
-			nh.getParam("c",c);
-			nh.getParam("d",d);
-			nh.getParam("signature_tolerance",signature_tolerance);
-			nh.getParam("area_tolerance",area_tolerance);
+			nh_private.getParam("low_threshold", canny_lowThres);
+			nh_private.getParam("ratio", ratio);
+			nh_private.getParam("kernel_size", kernel_size);
+			nh_private.getParam("a", a);
+			nh_private.getParam("b", b);
+			nh_private.getParam("c", c);
+			nh_private.getParam("d", d);
+			nh_private.getParam("signature_tolerance", signature_tolerance);
+			nh_private.getParam("area_tolerance", area_tolerance);
+			std::cout << a << std::endl;
 		}
 
 		~HelipadDetector(){}

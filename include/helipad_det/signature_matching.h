@@ -53,7 +53,7 @@ int isSimilar(std::vector<double>& ListSignatures, double a, double b, double c,
 	}
 
 
-	if (CountSegments < 11) return 0;
+	if (CountSegments < 12) return 0;
 
 	if (abs(Segments[0]-(a*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
 	if (abs(Segments[1]-(b*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-        <include file="$(find usb_cam)/launch/usb_cam-test.launch" />
-        <rosparam command="load" file="$(find helipad_det)/cfg/params.yaml" />
-        <node pkg="helipad_det" type="hdetect" name="hdetect" output="screen" required="true"/>
+        <arg name="mav_name" default="spedix"/>
+        <group ns="$(arg mav_name)">
+                <include file="$(find usb_cam)/launch/usb_cam-test.launch"/>
+                <node pkg="helipad_det" type="hdetect" name="hdetect" output="screen" required="true">
+                        <rosparam file="$(find helipad_det)/cfg/params.yaml"/>
+                </node>
+        </group>
 </launch>
