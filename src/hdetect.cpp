@@ -22,6 +22,9 @@ class HelipadDetector{
 
 		nav_msgs::Odometry odom;
 
+		std::vector<double> cam_mat;
+		std::vector<double> dist_coeff;
+
 		cv::Mat frame, processed_frame, result;
 	
 	public:
@@ -44,6 +47,8 @@ class HelipadDetector{
 			nh_private.getParam("d", d);
 			nh_private.getParam("signature_tolerance", signature_tolerance);
 			nh_private.getParam("area_tolerance", area_tolerance);
+			nh_private.getParam("camera_matrix/data", cam_mat);
+			nh_private.getParam("distortion_coefficients/data", dist_coeff);
 		}
 
 		~HelipadDetector(){}
@@ -72,7 +77,7 @@ class HelipadDetector{
 			std::vector<double> distances;
 			std::vector<double> signature;
 
-			processed_frame = preprocess(frame, canny_lowThres, ratio, kernel_size);
+			processed_frame = preprocess(frame, canny_lowThres, ratio, kernel_size, cam_mat, dist_coeff);
 			
 			cv_bridge::CvImage preprocessed_img;
 			preprocessed_img.encoding = sensor_msgs::image_encodings::MONO8;
@@ -93,9 +98,9 @@ class HelipadDetector{
 				signature.clear();
 
 				pointToLineDistance(list_contours.at(i), distances, b);        
-				smooth(distances, signature);
+				smooth(distances, signature, b);
 				
-				if(isSimilar(signature,a,b,c,d,signature_tolerance)==1)
+				if(isSimilar(signature,list_contours.at(i), a, b, c, d, signature_tolerance)==1)
 				{
 					// std::cout << odom.pose.pose.position.z << " " << odom.pose.pose.orientation.w << std::endl;	{
 					cv::drawContours(frame, list_contours, i, cv::Scalar(255, 0, 255));

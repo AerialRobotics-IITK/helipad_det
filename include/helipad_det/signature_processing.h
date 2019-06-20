@@ -20,10 +20,9 @@ void pointToLineDistance(const std::vector<cv::Point>& contour, std::vector<doub
         else if(i-n>=0 && i+n>=contour.size())
             distances.push_back(crossProduct(contour.at(i),contour.at(i-n),contour.at(i+n-contour.size()))/baseLength(contour.at(i+n-contour.size()),contour.at(i-n)));
     }
-    return;
 }
 
-void smooth(const std::vector<double>& distances, std::vector<double>& signature){
+void smooth(const std::vector<double>& distances, std::vector<double>& signature, double b){
     int i, size=distances.size();
     
     for(i=0;i<size;i++)
@@ -43,7 +42,7 @@ void smooth(const std::vector<double>& distances, std::vector<double>& signature
             signature.at(i)=0;
     }
     
-    int n=round((double)size/(26*3));
+    int n=round(b * size/3);
     int x0=0, y0=0;
 
     for(i = 0;i<n;i++)

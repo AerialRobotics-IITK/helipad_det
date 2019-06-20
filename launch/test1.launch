@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
     <node pkg="helipad_det" type="test1" name="test1" output="screen" required="true">
-        <param name="low_threshold" type="int" value="100"/>
-        <param name="ratio" type="int" value="3"/>
-        <param name="kernel_size" type="int" value="3"/>
+        <rosparam file="$(find helipad_det)/cfg/params.yaml"/>
     </node>
 </launch>

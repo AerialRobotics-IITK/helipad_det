@@ -12,7 +12,7 @@ geometry_msgs::Point findPose(cv::Point centre,ros::NodeHandle nh,nav_msgs::Odom
     std::vector<double> tempList;
     int tempIdx = 0;
 
-    nh.getParam("hdetect/camera_matrix/data", tempList);
+    nh.getParam("camera_matrix/data", tempList);
     tempIdx = 0;
     for (int i = 0; i < 3; i++)
     {
@@ -22,13 +22,13 @@ geometry_msgs::Point findPose(cv::Point centre,ros::NodeHandle nh,nav_msgs::Odom
         }
     }
 
-    nh.getParam("hdetect/camera/translation", tempList);
+    nh.getParam("camera/translation", tempList);
     for (int i = 0; i < 3; i++)
     {
         tCam(i) = tempList[i];
     }
     
-    nh.getParam("hdetect/camera/rotation", tempList);
+    nh.getParam("camera/rotation", tempList);
     tempIdx = 0;
     for (int i = 0; i < 3; i++)
     {

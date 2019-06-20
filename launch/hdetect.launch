@@ -2,9 +2,18 @@
 <launch>
         <arg name="mav_name" default="spedix"/>
         <group ns="$(arg mav_name)">
-                <include file="$(find usb_cam)/launch/usb_cam-test.launch"/>
+                <!-- <include file="$(find usb_cam)/launch/usb_cam-test.launch"/> -->
                 <node pkg="helipad_det" type="hdetect" name="hdetect" output="screen" required="true">
                         <rosparam file="$(find helipad_det)/cfg/params.yaml"/>
+
+                        <!-- Subscribed Topics -->
+                        <remap from="odom" to="odom"/>
+                        <remap from="usb_cam/image_raw" to="usb_cam/image_raw"/>
+
+                        <!-- Published Topics -->
+                        <remap from="detected_helipad" to="detected_helipad"/>
+                        <remap from="preprocessed_image" to="preprocessed_image"/>
+                        <remap from="helipad_position" to="helipad_position"/>
                 </node>
         </group>
 </launch>

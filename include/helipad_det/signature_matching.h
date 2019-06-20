@@ -1,72 +1,85 @@
 #ifndef HELIPAD_DET_SIGNATURE_MATCHING_H
 #define HELIPAD_DET_SIGNATURE_MATCHING_H
 
-int isSimilar(std::vector<double>& ListSignatures, double a, double b, double c, double d, double tolerance){
+int isSimilar(std::vector<double>& signature, std::vector<cv::Point>& contour, double a, double b, double c, double d, double tolerance){
 	
-	int ListSignaturesSize = ListSignatures.size();
-	int StartIndex=-1;
+	int signature_size = signature.size();
+	int start_index=-1;
 
-	for (int i=0;i<ListSignaturesSize;i++){
-		if (ListSignatures.at(i)==0) continue;
+	for (int i=0;i<signature_size;i++){
+		if (signature.at(i)==0) continue;
 		else{
-			int ZeroLength=0;
-			while (i+1+ZeroLength <= ListSignaturesSize-1 && ListSignatures.at(i+1+ZeroLength)==0)
-				ZeroLength++;
+			int zero_length=0;
+			while (i+1+zero_length <= signature_size-1 && signature.at(i+1+zero_length)==0)
+				zero_length++;
 
-			if (abs(ZeroLength+2-a*ListSignaturesSize) < (tolerance*ListSignaturesSize)){//
-				StartIndex=i;
+			if (abs(zero_length+2-a*signature_size) < (tolerance*signature_size)){//
+				start_index=i;
 				break;
 			}
 		}
 	}
 
-	if (StartIndex==-1) return 0;
+	if (start_index==-1) return 0;
 
-	std::vector<double> UpdatedListSignatures;
+	std::vector<double> updated_signature;
 
-	int Segments[12];
-	int CountSegments=0;
+	int segments[12];
+	int count_segments=0;
 
-	for(int i=StartIndex;i<ListSignaturesSize;i++)
-		UpdatedListSignatures.push_back(ListSignatures.at(i));
-	for(int i=0;i<StartIndex;i++)
-		UpdatedListSignatures.push_back(ListSignatures.at(i));
+	for(int i=start_index;i<signature_size;i++)
+		updated_signature.push_back(signature.at(i));
+	for(int i=0;i<start_index;i++)
+		updated_signature.push_back(signature.at(i));
 
-	int Length;
+	int length;
 
-	for(int i=0;i<ListSignaturesSize;i++){
-		if (UpdatedListSignatures.at(i)==0)
+	int c1=start_index,c2,c7,c8;
+
+	for(int i=0;i<signature_size;i++){
+		if (updated_signature.at(i)==0)
 			continue;
-		if (CountSegments > 11)
+		if (count_segments > 11)
 			return 0;
 		
-		Length=0;
+		length=0;
 		
-		while ((i+1+Length) <= ListSignaturesSize-1 && UpdatedListSignatures.at(i+1+Length)==0)
+		while ((i+1+length) <= signature_size-1 && updated_signature.at(i+1+length)==0)
 		{
-			Length++;
+			length++;
 		}
 		
-		i = i+Length-1;
-		Segments[CountSegments]=Length+2;
-		CountSegments++;
+		i = i+length-1;
+		segments[count_segments]=length+2;
+		count_segments++;
+
+		if(count_segments==2)
+			c2 = (i+start_index)%signature_size;
+		if(count_segments==7)
+			c7 = (i+start_index)%signature_size;
+		if(count_segments==8)
+			c8 = (i+start_index)%signature_size;
 	}
 
+	double m1 = (contour.at(c1).y - contour.at(c2).y)/(contour.at(c1).x - contour.at(c2).x);
+	double m2 = (contour.at(c7).y - contour.at(c8).y)/(contour.at(c7).x - contour.at(c8).x);
+	
+	if(fabs((m1 - m2)/(1 + m1*m2)) > tan(20.0*180/CV_PI))	return 0;
 
-	if (CountSegments < 12) return 0;
+	if (count_segments < 12) return 0;
 
-	if (abs(Segments[0]-(a*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
-	if (abs(Segments[1]-(b*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
-	if (abs(Segments[2]-(c*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
-	if (abs(Segments[3]-(d*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
-	if (abs(Segments[4]-(c*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
-	if (abs(Segments[5]-(b*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
-	if (abs(Segments[6]-(a*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
-	if (abs(Segments[7]-(b*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
-	if (abs(Segments[8]-(c*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
-	if (abs(Segments[9]-(d*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
-	if (abs(Segments[10]-(c*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
-	if (abs(Segments[11]-(b*ListSignaturesSize)) > (tolerance*ListSignaturesSize)) return 0;
+	if (abs(segments[0]-(a*signature_size)) > (tolerance*signature_size)) return 0;
+	if (abs(segments[1]-(b*signature_size)) > (tolerance*signature_size)) return 0;
+	if (abs(segments[2]-(c*signature_size)) > (tolerance*signature_size)) return 0;
+	if (abs(segments[3]-(d*signature_size)) > (tolerance*signature_size)) return 0;
+	if (abs(segments[4]-(c*signature_size)) > (tolerance*signature_size)) return 0;
+	if (abs(segments[5]-(b*signature_size)) > (tolerance*signature_size)) return 0;
+	if (abs(segments[6]-(a*signature_size)) > (tolerance*signature_size)) return 0;
+	if (abs(segments[7]-(b*signature_size)) > (tolerance*signature_size)) return 0;
+	if (abs(segments[8]-(c*signature_size)) > (tolerance*signature_size)) return 0;
+	if (abs(segments[9]-(d*signature_size)) > (tolerance*signature_size)) return 0;
+	if (abs(segments[10]-(c*signature_size)) > (tolerance*signature_size)) return 0;
+	if (abs(segments[11]-(b*signature_size)) > (tolerance*signature_size)) return 0;
 
 	return 1;
 }

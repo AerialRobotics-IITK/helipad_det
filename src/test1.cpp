@@ -1,8 +1,6 @@
-#include <ros/ros.h>
 #include <helipad_det/preprocess.h>
 #include <helipad_det/signature_processing.h>
 #include <helipad_det/signature_matching.h>
-#include <opencv2/opencv.hpp>
 
 int main(int argc, char** argv)
 {
@@ -11,6 +9,9 @@ int main(int argc, char** argv)
 
     double a,b,c,d,signature_tolerance, area_tolerance;
     int canny_lowThres, ratio, kernel_size, i;
+
+    std::vector<double> cam_mat;
+    std::vector<double> dist_coeff;
 
     param_get.param("low_threshold", canny_lowThres, 80);
     param_get.param("ratio", ratio, 3);
@@ -21,11 +22,13 @@ int main(int argc, char** argv)
     param_get.param("d", d, 0.08);
     param_get.param("signature_tolerance", signature_tolerance, 0.05);
     param_get.param("area_tolerance", area_tolerance, 0.05);
+    param_get.getParam("distortion_coefficients/data", dist_coeff);
+    param_get.getParam("camera_matrix/data", cam_mat);
 
-    cv::Mat img = cv::imread("/home/tanay/catkin_ws/src/helipad_det/etc/Refined H2.jpg");
+    cv::Mat img = cv::imread("/home/tanay/catkin_ws/src/helipad_det/etc/image2.png");
     ROS_ASSERT(img.empty()!=true);
 
-    cv::Mat prepro_img = preprocess(img, canny_lowThres, ratio, kernel_size);
+    cv::Mat prepro_img = preprocess(img, canny_lowThres, ratio, kernel_size, cam_mat, dist_coeff);
     cv::imshow("Preprocessed Image", prepro_img);
     cv::waitKey(0);
     cv::destroyAllWindows();
@@ -33,7 +36,7 @@ int main(int argc, char** argv)
     std::vector<std::vector<cv::Point> > ListContours;
 
     cv::findContours(prepro_img, ListContours, CV_RETR_TREE, CV_CHAIN_APPROX_NONE);
-
+    cv::cvtColor(prepro_img, prepro_img, CV_GRAY2BGR);
     std::vector<double> Distances;
     std::vector<double> Signature;
 
@@ -46,16 +49,16 @@ int main(int argc, char** argv)
         Signature.clear();
 
         pointToLineDistance(ListContours.at(i), Distances, b);
-        smooth(Distances, Signature);
+        smooth(Distances, Signature, b);
 
         graph(Distances, "Unrefined Graph");
         graph(Signature, "Refined Graph");
 
-        if(isSimilar(Signature, a, b, c, d, signature_tolerance))
-            centre(Signature, ListContours.at(i), img);
-        cv::drawContours(img, ListContours, i, cv::Scalar(255, 0, 255));
-        retrace(Signature, ListContours.at(i), img);
-        cv::imshow("contours", img);
+        if(isSimilar(Signature, ListContours.at(i), a, b, c, d, signature_tolerance))
+            centre(Signature, ListContours.at(i), prepro_img);
+        cv::drawContours(prepro_img, ListContours, i, cv::Scalar(255, 0, 255));
+        retrace(Signature, ListContours.at(i), prepro_img);
+        cv::imshow("contours", prepro_img);
 
         if((char)cv::waitKey(0)=='q')
             return -1;
