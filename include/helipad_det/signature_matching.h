@@ -49,7 +49,6 @@ int isSimilar(std::vector<double>& signature, std::vector<cv::Point>& contour, d
 			length++;
 		}
 		
-		i = i+length-1;
 		segments[count_segments]=length+2;
 		count_segments++;
 
@@ -61,6 +60,8 @@ int isSimilar(std::vector<double>& signature, std::vector<cv::Point>& contour, d
 		
 		if(count_segments==8)
 			c8 = (i+start_index)%signature_size;
+		
+		i = i + length - 1;
 	}
 
 	if (count_segments < 12) return 0;
