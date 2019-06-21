@@ -7,8 +7,11 @@ b : 0.04
 c : 0.08
 d : 0.08
 
-signature_tolerance : 0.05
+signature_tolerance : 0.1
 area_tolerance : 0.0001
+
+publish_preprocess : true
+publish_detected_helipad : true
 
 camera : 
   translation : [0, 0, 0]

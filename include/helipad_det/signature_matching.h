@@ -55,18 +55,19 @@ int isSimilar(std::vector<double>& signature, std::vector<cv::Point>& contour, d
 
 		if(count_segments==2)
 			c2 = (i+start_index)%signature_size;
+
 		if(count_segments==7)
 			c7 = (i+start_index)%signature_size;
+		
 		if(count_segments==8)
 			c8 = (i+start_index)%signature_size;
 	}
 
-	double m1 = (contour.at(c1).y - contour.at(c2).y)/(contour.at(c1).x - contour.at(c2).x);
-	double m2 = (contour.at(c7).y - contour.at(c8).y)/(contour.at(c7).x - contour.at(c8).x);
-	
-	if(fabs((m1 - m2)/(1 + m1*m2)) > tan(20.0*180/CV_PI))	return 0;
-
 	if (count_segments < 12) return 0;
+
+	double m1 = (contour.at(c1).y - contour.at(c2).y)*1.0/(contour.at(c1).x - contour.at(c2).x);
+	double m2 = (contour.at(c7).y - contour.at(c8).y)*1.0/(contour.at(c7).x - contour.at(c8).x);
+	if(fabs((m1 - m2)/(1 + m1*m2)) > tan(89.0*CV_PI/180))	return 0;
 
 	if (abs(segments[0]-(a*signature_size)) > (tolerance*signature_size)) return 0;
 	if (abs(segments[1]-(b*signature_size)) > (tolerance*signature_size)) return 0;

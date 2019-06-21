@@ -42,8 +42,8 @@ cv::Mat preprocess(const cv::Mat& img, int canny_lowThreshold, int canny_ratio, 
     }
 
     cv::Mat img_, gray, blur, result;
-    cv::undistort(img, img_, intrinsic, dist_coeff_);
-    cv::cvtColor(img_,gray,CV_BGR2GRAY);
+    // cv::undistort(img, img_, intrinsic, dist_coeff_);
+    cv::cvtColor(img,gray,CV_BGR2GRAY);
     cv::GaussianBlur(gray, blur, cv::Size(5, 5), 0, 0);
     cv::adaptiveThreshold(blur,result,255,CV_ADAPTIVE_THRESH_GAUSSIAN_C, CV_THRESH_BINARY_INV, 75, 10);
     cv::Mat Element = getStructuringElement (cv::MORPH_RECT,cv::Size(3,3));
