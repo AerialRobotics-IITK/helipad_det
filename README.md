@@ -39,6 +39,6 @@ Build using either (preferably) `catkin build helipad_det` or `catkin_make` afte
 -hdetect : Detects the 'H' marker and calculates its location in ground truth
 ## Topics
 Topics can be remapped to suit your use case using the `remap` tags in the `hdetect.launch` file.
-###hdetect node
+### hdetect node
 + Subscribed
     
