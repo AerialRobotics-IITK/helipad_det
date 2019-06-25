@@ -1,7 +1,6 @@
 #ifndef HELIPAD_DET_SIGNATURE_PROCESSING_H
 #define HELIPAD_DET_SIGNATURE_PROCESSING_H
 
-
 double crossProduct(cv::Point point, cv::Point line_start, cv::Point line_end){
    return fabs((point.x - line_start.x) * (line_end.y - line_start.y) - (point.y - line_start.y) * (line_end.x - line_start.x)) ;   
 }
@@ -10,8 +9,7 @@ double baseLength(cv::Point line_end, cv::Point line_start){
     return cv::norm(line_end - line_start);
 }
 
-void pointToLineDistance(const std::vector<cv::Point>& contour, std::vector<double>& distances, double b){
-    int n = round(b * contour.size()/3);
+void pointToLineDistance(const std::vector<cv::Point>& contour, std::vector<double>& distances, double n){
     for(int i=0; i< contour.size();i++){
         if(i-n>=0 && i+n<contour.size())
             distances.push_back(crossProduct(contour.at(i),contour.at(i-n),contour.at(i+n))/baseLength(contour.at(i+n),contour.at(i-n)));
@@ -22,9 +20,9 @@ void pointToLineDistance(const std::vector<cv::Point>& contour, std::vector<doub
     }
 }
 
-void smooth(const std::vector<double>& distances, std::vector<double>& signature, double b){
+void smooth(const std::vector<double>& distances, std::vector<double>& signature, double n){
     int i, size=distances.size();
-    
+    // double time = (double) cv::getTickCount();
     for(i=0;i<size;i++)
         signature.push_back(0);
 
@@ -42,7 +40,6 @@ void smooth(const std::vector<double>& distances, std::vector<double>& signature
             signature.at(i)=0;
     }
     
-    int n=round(b * size/3);
     int x0=0, y0=0;
 
     for(i = 0;i<n;i++)
@@ -150,6 +147,7 @@ void smooth(const std::vector<double>& distances, std::vector<double>& signature
             signature.at(x0)=y0;
         }
     }
+    // std::cout << "TIME TAKEN=" << ((double)cv::getTickCount()-time)/cv::getTickFrequency() << std::endl;
 }
 
 void smoother(const std::vector<double>& input, std::vector<double>& output){
@@ -219,13 +217,13 @@ void graph(const std::vector<double>& signature, cv::String str){
     cv::destroyAllWindows();
 }
 
-void retrace(const std::vector<double>& Signature, const std::vector<cv::Point>& Contour, cv::Mat img){
+void retrace(const std::vector<double>& Signature, const std::vector<cv::Point>& Contour, cv::Mat& img){
     for(int i=0;i<Signature.size();i++)
         if(Signature.at(i)!=0)
             cv::circle(img, Contour.at(i), 5, cv::Scalar(0, 0, 255));
 }
 
-cv::Point centre(const std::vector<double>& Signature, const std::vector<cv::Point>& Contour, cv::Mat img){
+cv::Point centre(const std::vector<double>& Signature, const std::vector<cv::Point>& Contour, cv::Mat& img){
     int x0=0, y0=0, count=0;
     for(int i=0;i<Signature.size();i++)
     {
@@ -240,6 +238,20 @@ cv::Point centre(const std::vector<double>& Signature, const std::vector<cv::Poi
     y0 = round( (double)y0/count);
     cv::circle(img, cv::Point(x0, y0), 3, cv::Scalar(255, 0, 0), -1);
     return cv::Point(x0, y0);
+}
+
+int loc(int i, int n)
+{
+    if(0<=i<n)
+        return i;
+    else if(i>=n)
+    {
+        return i%n;
+    }
+    else if(i<0)
+    {
+        return n+i;
+    }   
 }
 
 #endif

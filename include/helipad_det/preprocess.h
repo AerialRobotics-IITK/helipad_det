@@ -7,8 +7,8 @@
 #include <image_transport/image_transport.h>
 #include <sensor_msgs/image_encodings.h>
 #include <tf/LinearMath/Quaternion.h>
-#include <Eigen/Dense>
-#include <Eigen/Core>
+#include <eigen3/Eigen/Dense>
+#include <eigen3/Eigen/Core>
 #include <nav_msgs/Odometry.h>
 #include <geometry_msgs/Point.h>
 #include <geometry_msgs/PoseStamped.h>
@@ -18,10 +18,11 @@ double baseLength(cv::Point, cv::Point);
 void pointToLine(const std::vector<cv::Point>&, std::vector<double>&);
 void smooth(const std::vector<double>&, std::vector<double>&);
 void graph(const std::vector<double>&, cv::String);
-void retrace(const std::vector<double>&, const std::vector<cv::Point>&, cv::Mat);
-cv::Point centre(const std::vector<double>&, const std::vector<cv::Point>&, cv::Mat);
+void retrace(const std::vector<double>&, const std::vector<cv::Point>&, cv::Mat&);
+cv::Point centre(const std::vector<double>&, const std::vector<cv::Point>&, cv::Mat&);
+int loc(int, int);
 
-cv::Mat preprocess(const cv::Mat& img, int canny_lowThreshold, int canny_ratio, int canny_kernel_size, std::vector<double>& cam_mat, std::vector<double>& dist_coeff){
+cv::Mat preprocess(const cv::Mat& img, int threshold, std::vector<double>& cam_mat,std::vector<double>& dist_coeff){
     ROS_ASSERT(img.empty()!=true);
     
     int tempIdx=0;
@@ -42,12 +43,15 @@ cv::Mat preprocess(const cv::Mat& img, int canny_lowThreshold, int canny_ratio, 
     }
 
     cv::Mat img_, gray, blur, result;
-    // cv::undistort(img, img_, intrinsic, dist_coeff_);
-    cv::cvtColor(img,gray,CV_BGR2GRAY);
-    cv::GaussianBlur(gray, blur, cv::Size(5, 5), 0, 0);
-    cv::adaptiveThreshold(blur,result,255,CV_ADAPTIVE_THRESH_GAUSSIAN_C, CV_THRESH_BINARY_INV, 75, 10);
+    cv::undistort(img, img_, intrinsic, dist_coeff_);
+    cv::cvtColor(img_,gray,CV_BGR2GRAY);
+    cv::GaussianBlur(gray, blur, cv::Size(3, 3), 0, 0);
+    // double time = (double) cv::getTickCount();
+    cv::threshold(blur, result, threshold, 255, CV_THRESH_BINARY_INV);
+    // std::cout << "TIME TAKEN THRESHOLD=" << ((double)cv::getTickCount()-time)/cv::getTickFrequency() << std::endl;
+
     cv::Mat Element = getStructuringElement (cv::MORPH_RECT,cv::Size(3,3));
-    cv::morphologyEx(result, result, CV_MOP_OPEN, Element);
+    cv::morphologyEx(result, result, CV_MOP_CLOSE, Element);
     // cv:Canny(result, result, canny_lowThreshold, canny_lowThreshold*canny_ratio, canny_kernel_size);
     return result;
 }

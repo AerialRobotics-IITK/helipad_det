@@ -1,14 +1,12 @@
-low_threshold : 100
-ratio : 3
-kernel_size : 3
+threshold : 60
 
-a : 0.19
-b : 0.04
-c : 0.08
-d : 0.08
+a : 0.192307
+b : 0.038461
+c : 0.0769230
+d : 0.0769230
 
 signature_tolerance : 0.1
-area_tolerance : 0.0001
+area_tolerance : 0.0005
 
 publish_preprocess : true
 publish_detected_helipad : true

@@ -7,6 +7,7 @@ class HelipadDetector{
 	private:
 		ros::NodeHandle nh_private;
 		ros::NodeHandle nh_public;
+		
 		image_transport::ImageTransport it_private;
 		image_transport::ImageTransport it_public;
 
@@ -17,7 +18,7 @@ class HelipadDetector{
 		image_transport::Publisher image_pub;
 		image_transport::Publisher image_pub_preprocess;
 
-		int canny_lowThres, ratio, kernel_size;
+		int threshold;
 		double a, b, c, d, signature_tolerance, area_tolerance;
 
 		bool publish_preprocess, publish_detected_helipad;
@@ -32,17 +33,7 @@ class HelipadDetector{
 	public:
 	  	HelipadDetector():nh_private("~"), it_private(nh_private), nh_public(), it_public(nh_public){  
 			// Subscribe to input video feed and publish output video feed
-
-			odom_sub = nh_public.subscribe("odometry", 1, &HelipadDetector::odomCb, this);
-			image_sub = it_public.subscribe("usb_cam/image_raw", 1, &HelipadDetector::imageCb, this);
-
-			image_pub = it_private.advertise("detected_helipad", 1);
-			image_pub_preprocess = it_private.advertise("preprocessed_image", 1);
-			pose_pub = nh_private.advertise<geometry_msgs::Point>("helipad_position", 1);
-
-			nh_private.getParam("low_threshold", canny_lowThres);
-			nh_private.getParam("ratio", ratio);
-			nh_private.getParam("kernel_size", kernel_size);
+			nh_private.getParam("threshold", threshold);
 			nh_private.getParam("a", a);
 			nh_private.getParam("b", b);
 			nh_private.getParam("c", c);
@@ -53,6 +44,13 @@ class HelipadDetector{
 			nh_private.getParam("distortion_coefficients/data", dist_coeff);
 			nh_private.getParam("publish_preprocess", publish_preprocess);
 			nh_private.getParam("publish_detected_helipad", publish_detected_helipad);
+
+			odom_sub = nh_public.subscribe("odom", 1, &HelipadDetector::odomCb, this);
+			image_sub = it_public.subscribe("usb_cam/image_raw", 1, &HelipadDetector::imageCb, this);
+
+			image_pub = it_private.advertise("detected_helipad", 1);
+			image_pub_preprocess = it_private.advertise("preprocessed_image", 1);
+			pose_pub = nh_private.advertise<geometry_msgs::Point>("helipad_position", 1);
 		}
 
 		~HelipadDetector(){}
@@ -75,13 +73,13 @@ class HelipadDetector{
 			frame=cv_ptr->image;
 			ROS_ASSERT(frame.empty()!=true);
 
-			int i;
+			int i,n;
 
 			std::vector<std::vector<cv::Point> > list_contours;
 			std::vector<double> distances;
 			std::vector<double> signature;
 
-			processed_frame = preprocess(frame, canny_lowThres, ratio, kernel_size, cam_mat, dist_coeff);
+			processed_frame = preprocess(frame, threshold, cam_mat, dist_coeff);
 			if(publish_preprocess)
 			{	
 				cv_bridge::CvImage preprocessed_img;
@@ -93,27 +91,34 @@ class HelipadDetector{
 
 			cv::findContours(processed_frame, list_contours, CV_RETR_LIST, CV_CHAIN_APPROX_NONE);
 			
-			cv::Point Centre;
+			cv::Point centre_;
 
 			for(i=0;i<list_contours.size();i++)
 			{
 				if(cv::contourArea(list_contours.at(i)) < area_tolerance*frame.size().area())
 						continue;
 				
+				int n = floor(b*list_contours.at(i).size()/2.7);
+
 				distances.clear();
 				signature.clear();
 								
-				pointToLineDistance(list_contours.at(i), distances, b);        
+				pointToLineDistance(list_contours.at(i), distances, n);
 
-				smooth(distances, signature, b);
+				// for(int j=0;j<distances.size();j++)
+				// 	distances.at(j) = (cv::norm( list_contours.at(i).at( loc(j+n, distances.size()) )+list_contours.at(i).at( loc(j-n, distances.size()) )-2*list_contours.at(i).at( loc(j, distances.size()) ) ));
+
+				smooth(distances, signature, n);
 				
 				if(isSimilar(signature,list_contours.at(i), a, b, c, d, signature_tolerance)==1)
 				{
 					cv::drawContours(frame, list_contours, i, cv::Scalar(255, 0, 255));
-					Centre = centre(signature, list_contours.at(i), frame);
+					centre_ = centre(signature, list_contours.at(i), frame);
+					pose_pub.publish(findPose(centre_, nh_private, odom));
 					break;
 				}
-				else {
+				else
+				{
 					cv::drawContours(frame, list_contours, i, cv::Scalar(0, 255, 0));
 				}
 			}
@@ -133,6 +138,12 @@ int main(int argc, char** argv)
 {
 	ros::init(argc, argv, "hdetect");
   	HelipadDetector hd;
-  	ros::spin();
+	ros::Rate rate(10);
+	while (ros::ok())
+	{
+		ros::spinOnce();
+		rate.sleep();
+	}
+	
 	return 0;
 }

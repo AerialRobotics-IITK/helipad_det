@@ -72,7 +72,7 @@ geometry_msgs::Point findPose(cv::Point centre,ros::NodeHandle nh,nav_msgs::Odom
     Eigen::Vector3f quadCoord = camToQuad * scaleUp * invCamMatrix * imgVec;
 
     quadCoord = quadCoord + tCam;
-    std::cout << quadCoord << std::endl << std::endl;
+    // std::cout << quadCoord << std::endl << std::endl;
 
     Eigen::Vector3f globCoord = quadToGlob * quadCoord;
     temp.x = globCoord(0) + odom.pose.pose.position.x;

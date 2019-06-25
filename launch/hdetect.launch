@@ -7,7 +7,7 @@
                         <rosparam file="$(find helipad_det)/cfg/params.yaml"/>
 
                         <!-- Subscribed Topics -->
-                        <remap from="odom" to="odom"/>
+                        <remap from="odom" to="pilot/local_position/odom"/>
                         <remap from="usb_cam/image_raw" to="usb_cam/image_raw"/>
 
                         <!-- Published Topics -->
