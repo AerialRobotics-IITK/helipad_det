@@ -220,7 +220,7 @@ void graph(const std::vector<double>& signature, cv::String str){
 void retrace(const std::vector<double>& Signature, const std::vector<cv::Point>& Contour, cv::Mat& img){
     for(int i=0;i<Signature.size();i++)
         if(Signature.at(i)!=0)
-            cv::circle(img, Contour.at(i), 5, cv::Scalar(0, 0, 255));
+            cv::circle(img, Contour.at(i), 5, cv::Scalar(255, 0, 0));
 }
 
 cv::Point centre(const std::vector<double>& Signature, const std::vector<cv::Point>& Contour, cv::Mat& img){
@@ -236,7 +236,7 @@ cv::Point centre(const std::vector<double>& Signature, const std::vector<cv::Poi
     }
     x0 = round( (double)x0/count);
     y0 = round( (double)y0/count);
-    cv::circle(img, cv::Point(x0, y0), 3, cv::Scalar(255, 0, 0), -1);
+    cv::circle(img, cv::Point(x0, y0), 3, cv::Scalar(0, 255, 0), -1);
     return cv::Point(x0, y0);
 }
 

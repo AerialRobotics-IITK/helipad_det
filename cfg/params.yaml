@@ -1,4 +1,4 @@
-threshold : 60
+threshold : 80
 
 a : 0.192307
 b : 0.038461
@@ -11,22 +11,20 @@ area_tolerance : 0.0005
 publish_preprocess : true
 publish_detected_helipad : true
 
-camera : 
-  translation : [0, 0, 0]
-  rotation : [0, -1, 0, -1, 0, 0, 0, 0, -1]
+mav_name : ironman
 
-image_width: 640
+image_width: 752
 image_height: 480
 camera_name: head_camera
 camera_matrix:
   rows: 3
   cols: 3
-  data: [575.8357775641182, 0, 304.5915536401063, 0, 579.0890363516307, 236.6503982296557, 0, 0, 1]
+  data: [414.1573058656413, 0, 379.5051916771028, 0, 413.8961901608803, 260.064272132189, 0, 0, 1]
 distortion_model: plumb_bob
 distortion_coefficients:
   rows: 1
   cols: 5
-  data: [-0.1133007661635582, 0.1594946896698325, -0.0005342430392635209, 0.003218401667875472, 0]
+  data: [-0.2667497715010867, 0.05824595745054147, 0.001097211085107507, -0.001283170962460823, 0]
 rectification_matrix:
   rows: 3
   cols: 3
@@ -34,4 +32,29 @@ rectification_matrix:
 projection_matrix:
   rows: 3
   cols: 4
-  data: [566.55078125, 0, 307.024426241871, 0, 0, 572.1759033203125, 236.448690455818, 0, 0, 0, 1, 0]
+  data: [300.63134765625, 0, 377.7457987137605, 0, 0, 370.5363464355469, 265.8181864458038, 0, 0, 0, 1, 0]
+
+# camera : 
+#   translation : [0, 0, 0]
+#   rotation : [0, -1, 0, -1, 0, 0, 0, 0, -1]
+
+# image_width: 640
+# image_height: 480
+# camera_name: head_camera
+# camera_matrix:
+#   rows: 3
+#   cols: 3
+#   data: [575.8357775641182, 0, 304.5915536401063, 0, 579.0890363516307, 236.6503982296557, 0, 0, 1]
+# distortion_model: plumb_bob
+# distortion_coefficients:
+#   rows: 1
+#   cols: 5
+#   data: [-0.1133007661635582, 0.1594946896698325, -0.0005342430392635209, 0.003218401667875472, 0]
+# rectification_matrix:
+#   rows: 3
+#   cols: 3
+#   data: [1, 0, 0, 0, 1, 0, 0, 0, 1]
+# projection_matrix:
+#   rows: 3
+#   cols: 4
+#   data: [566.55078125, 0, 307.024426241871, 0, 0, 572.1759033203125, 236.448690455818, 0, 0, 0, 1, 0]

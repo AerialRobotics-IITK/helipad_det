@@ -21,13 +21,13 @@ geometry_msgs::Point findPose(cv::Point centre,ros::NodeHandle nh,nav_msgs::Odom
             intrinsic.at<double>(i, j) = tempList[tempIdx++];
         }
     }
-
+    tempList.empty();
     nh.getParam("camera/translation", tempList);
     for (int i = 0; i < 3; i++)
     {
         tCam(i) = tempList[i];
     }
-    
+    tempList.empty();
     nh.getParam("camera/rotation", tempList);
     tempIdx = 0;
     for (int i = 0; i < 3; i++)
@@ -37,7 +37,7 @@ geometry_msgs::Point findPose(cv::Point centre,ros::NodeHandle nh,nav_msgs::Odom
             quadToCam(i, j) = tempList[tempIdx++];
         }
     }
-
+    tempList.empty();
     for (int i = 0; i < 3; i++)
     {
         for (int j = 0; j < 3; j++)

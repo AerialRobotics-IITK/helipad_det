@@ -7,19 +7,17 @@ class HelipadDetector{
 	private:
 		ros::NodeHandle nh_private;
 		ros::NodeHandle nh_public;
-		
-		image_transport::ImageTransport it_private;
-		image_transport::ImageTransport it_public;
 
-		ros::Publisher pose_pub;
+		ros::Subscriber image_sub;
 		ros::Subscriber odom_sub;
-
-		image_transport::Subscriber image_sub;
-		image_transport::Publisher image_pub;
-		image_transport::Publisher image_pub_preprocess;
+		
+		ros::Publisher pose_pub;
+		ros::Publisher image_pub;
+		ros::Publisher image_pub_preprocess;
 
 		int threshold;
 		double a, b, c, d, signature_tolerance, area_tolerance;
+		std::string mav_name;
 
 		bool publish_preprocess, publish_detected_helipad;
 
@@ -31,7 +29,7 @@ class HelipadDetector{
 		cv::Mat frame, processed_frame, result;
 	
 	public:
-	  	HelipadDetector():nh_private("~"), it_private(nh_private), nh_public(), it_public(nh_public){  
+	  	HelipadDetector():nh_private("~"), nh_public(){  
 			// Subscribe to input video feed and publish output video feed
 			nh_private.getParam("threshold", threshold);
 			nh_private.getParam("a", a);
@@ -44,13 +42,14 @@ class HelipadDetector{
 			nh_private.getParam("distortion_coefficients/data", dist_coeff);
 			nh_private.getParam("publish_preprocess", publish_preprocess);
 			nh_private.getParam("publish_detected_helipad", publish_detected_helipad);
+			nh_private.getParam("mav_name", mav_name);
 
 			odom_sub = nh_public.subscribe("odom", 1, &HelipadDetector::odomCb, this);
-			image_sub = it_public.subscribe("usb_cam/image_raw", 1, &HelipadDetector::imageCb, this);
+			image_sub = nh_public.subscribe("rectified_image", 1, &HelipadDetector::imageCb, this);
 
-			image_pub = it_private.advertise("detected_helipad", 1);
-			image_pub_preprocess = it_private.advertise("preprocessed_image", 1);
-			pose_pub = nh_private.advertise<geometry_msgs::Point>("helipad_position", 1);
+			image_pub = nh_private.advertise<sensor_msgs::Image>("detected_helipad", 1);
+			image_pub_preprocess = nh_private.advertise<sensor_msgs::Image>("preprocessed_image", 1);
+			pose_pub = nh_private.advertise<detector_msgs::BBPoses>("helipad_position", 1);
 		}
 
 		~HelipadDetector(){}
@@ -92,6 +91,10 @@ class HelipadDetector{
 			cv::findContours(processed_frame, list_contours, CV_RETR_LIST, CV_CHAIN_APPROX_NONE);
 			
 			cv::Point centre_;
+			geometry_msgs::Point point_h;
+
+			detector_msgs::BBPose bbpose[1];
+			detector_msgs::BBPoses bbposes;			
 
 			for(i=0;i<list_contours.size();i++)
 			{
@@ -112,15 +115,25 @@ class HelipadDetector{
 				
 				if(isSimilar(signature,list_contours.at(i), a, b, c, d, signature_tolerance)==1)
 				{
-					cv::drawContours(frame, list_contours, i, cv::Scalar(255, 0, 255));
+					cv::drawContours(frame, list_contours, i, cv::Scalar(0, 0, 255), 2);
 					centre_ = centre(signature, list_contours.at(i), frame);
-					pose_pub.publish(findPose(centre_, nh_private, odom));
+					retrace(signature, list_contours.at(i), frame);
+					point_h = findPose(centre_, nh_private, odom);
+					bbpose[0].position = point_h;
+					bbpose[0].boxID = -1;
+					bbpose[0].type = -1;
+					bbpose[0].area = 0;
+					bbposes.stamp = ros::Time::now();
+					bbposes.imageID = -1;
+					bbposes.mav_name = mav_name;
+					bbposes.object_poses.push_back(bbpose[0]);
+					pose_pub.publish(bbposes);
 					break;
 				}
-				else
-				{
-					cv::drawContours(frame, list_contours, i, cv::Scalar(0, 255, 0));
-				}
+				// else
+				// {
+				// 	cv::drawContours(frame, list_contours, i, cv::Scalar(0, 255, 0));
+				// }
 			}
 			
 			if (publish_detected_helipad)
@@ -138,12 +151,11 @@ int main(int argc, char** argv)
 {
 	ros::init(argc, argv, "hdetect");
   	HelipadDetector hd;
-	ros::Rate rate(10);
+	ros::Rate rate(20);
 	while (ros::ok())
 	{
 		ros::spinOnce();
 		rate.sleep();
 	}
-	
 	return 0;
 }
