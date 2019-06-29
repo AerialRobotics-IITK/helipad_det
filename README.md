@@ -4,6 +4,7 @@ The aim of this ROS package is to provide detection and pose estimation of an H-
 This package has the following dependencies:
 - [OpenCV](https://opencv.org/) (3.0 or higher)
 - [Eigen](http://eigen.tuxfamily.org/index.php?title=Main_Page)
+- [img_proc](https://github.com/tanaysaha/img_proc)
 - ROS Kinetic (stable, tested) with the following packages:
 
   - catkin
