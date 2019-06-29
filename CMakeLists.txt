@@ -22,3 +22,6 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 
 cs_add_executable(hdetect src/hdetect.cpp)
 target_link_libraries(hdetect ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+
+cs_install()
+cs_export()
