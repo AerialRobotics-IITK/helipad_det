@@ -32,6 +32,6 @@
   <depend>eigen_conversions</depend>
   <depend>tf</depend>
   <depend>tf_conversions</depend>
-  <depend>detector_msgs</depend>
+  <depend>mav_utils_msgs</depend>
 
 </package>

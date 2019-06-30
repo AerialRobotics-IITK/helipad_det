@@ -12,8 +12,8 @@
 #include <nav_msgs/Odometry.h>
 #include <geometry_msgs/Point.h>
 #include <geometry_msgs/PoseStamped.h>
-#include <detector_msgs/BBPose.h>
-#include <detector_msgs/BBPoses.h>
+#include <mav_utils_msgs/BBPose.h>
+#include <mav_utils_msgs/BBPoses.h>
 
 #define exit flag==-1
 #define run flag==1

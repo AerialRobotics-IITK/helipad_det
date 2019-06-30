@@ -2,7 +2,7 @@
 #include <helipad_det/signature_processing.h>
 #include <helipad_det/signature_matching.h>
 #include <helipad_det/pose_estimation.h>
-#include <helipad_det/signal.h>
+#include <mav_utils_msgs/signal.h>
 
 class HelipadDetector{
 	private:
@@ -50,11 +50,11 @@ class HelipadDetector{
 			odom_sub = nh_public.subscribe("odom", 1, &HelipadDetector::odomCb, this);
 			image_sub = nh_public.subscribe("rectified_image", 1, &HelipadDetector::imageCb, this);
 
-			server = nh_private.advertiseService("execute", &HelipadDetector::process, this);
+			server = nh_private.advertiseService("terminate", &HelipadDetector::process, this);
 
 			image_pub = nh_private.advertise<sensor_msgs::Image>("detected_helipad", 1);
 			image_pub_preprocess = nh_private.advertise<sensor_msgs::Image>("preprocessed_image", 1);
-			pose_pub = nh_private.advertise<detector_msgs::BBPoses>("helipad_position", 1);
+			pose_pub = nh_private.advertise<mav_utils_msgs::BBPoses>("helipad_position", 1);
 		}
 
 		~HelipadDetector(){}
@@ -65,7 +65,7 @@ class HelipadDetector{
 			return;
 		}
 	
-		bool process(helipad_det::signal::Request& req, helipad_det::signal::Response& res){
+		bool process(mav_utils_msgs::signal::Request& req, mav_utils_msgs::signal::Response& res){
     
 			// process request
 			switch(req.signal){
@@ -125,8 +125,8 @@ class HelipadDetector{
 				cv::Point centre_;
 				geometry_msgs::Point point_h;
 
-				detector_msgs::BBPose bbpose[1];
-				detector_msgs::BBPoses bbposes;			
+				mav_utils_msgs::BBPose bbpose[1];
+				mav_utils_msgs::BBPoses bbposes;			
 
 				for(i=0;i<list_contours.size();i++)
 				{
