@@ -18,7 +18,7 @@
 #define exit flag==-1
 #define run flag==1
 
-int flag = 0;
+int flag = 1;
 
 double crossProduct(cv::Point, cv::Point, cv::Point);
 double baseLength(cv::Point, cv::Point);
@@ -34,25 +34,25 @@ cv::Mat preprocess(cv::Mat& img, int threshold, std::vector<double>& cam_mat,std
     
     cv::Mat img_, gray, blur, result;
 
-    // int tempIdx=0;
-    // cv::Mat intrinsic = cv::Mat_<double>(3, 3);
-    // cv::Mat dist_coeff_ = cv::Mat_<double>(1,5);
+    int tempIdx=0;
+    cv::Mat intrinsic = cv::Mat_<double>(3, 3);
+    cv::Mat dist_coeff_ = cv::Mat_<double>(1,5);
     
-    // for (int i = 0; i < 3; i++)
-    // {
-    //     for (int j = 0; j < 3; j++)
-    //     {
-    //         intrinsic.at<double>(i, j) = cam_mat.at(tempIdx++);
-    //     }
-    // }
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            intrinsic.at<double>(i, j) = cam_mat.at(tempIdx++);
+        }
+    }
 
-    // for(int i=0;i<5;i++)
-    // {
-    //     dist_coeff_.at<double>(i) = dist_coeff[i];
-    // }
+    for(int i=0;i<5;i++)
+    {
+        dist_coeff_.at<double>(i) = dist_coeff[i];
+    }
 
-    // cv::undistort(img, img_, intrinsic, dist_coeff_);
-    // img = img_.clone();
+    cv::undistort(img, img_, intrinsic, dist_coeff_);
+    img = img_.clone();
     cv::cvtColor(img,gray,CV_BGR2GRAY);
     cv::GaussianBlur(gray, blur, cv::Size(3, 3), 0, 0);
     // double time = (double) cv::getTickCount();

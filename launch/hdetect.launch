@@ -3,19 +3,11 @@
         <arg name="mav_name" default="ironman"/>
         <group ns="$(arg mav_name)">
                 <!-- <include file="$(find usb_cam)/launch/usb_cam-test.launch"/> -->
-                <node pkg="img_proc" type="rectifier" name="rectifier" output="screen" required="true">
-                        <!-- Subscribed Topics -->
-                        <remap from="usb_cam/camera_info" to="usb_cam/camera_info"/>
-                        <remap from="usb_cam/image_raw" to="mv/image_raw"/>
-
-                        <!-- Published Topics -->
-                        <remap from="rectified_image" to="rectified_image"/>
-                </node>
                 <node pkg="helipad_det" type="hdetect" name="hdetect" output="screen" required="true">
                         <rosparam file="$(find helipad_det)/cfg/params.yaml"/>
                         <!-- Subscribed Topics -->
                         <remap from="odom" to="pilot/local_position/odom"/>
-                        <remap from="rectified_image" to="rectified_image"/>
+                        <remap from="rectified_image" to="mv/image_raw"/>
 
                         <!-- Published Topics -->
                         <remap from="detected_helipad" to="detected_helipad"/>
