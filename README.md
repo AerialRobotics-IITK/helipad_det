@@ -42,4 +42,10 @@ Build using either (preferably) `catkin build helipad_det` or `catkin_make` afte
 Topics can be remapped to suit your use case using the `remap` tags in the `hdetect.launch` file.
 ### hdetect node
 + Subscribed
+  - /mv/image_raw
+  - /Odometry
++ Published
+  - /helipad_position
+  - /preprocessed_image
+  - /detected_helipad
     
