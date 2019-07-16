@@ -34,9 +34,9 @@ projection_matrix:
   cols: 4
   data: [300.63134765625, 0, 377.7457987137605, 0, 0, 370.5363464355469, 265.8181864458038, 0, 0, 0, 1, 0]
 
-# camera : 
-#   translation : [0, 0, 0]
-#   rotation : [0, -1, 0, -1, 0, 0, 0, 0, -1]
+camera : 
+  translation : [0, 0, 0]
+  rotation : [0, -1, 0, -1, 0, 0, 0, 0, -1]
 
 # image_width: 640
 # image_height: 480

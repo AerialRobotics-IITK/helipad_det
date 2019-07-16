@@ -157,7 +157,6 @@ class HelipadDetector{
 						bbpose[0].area = 0;
 						bbposes.stamp = ros::Time::now();
 						bbposes.imageID = -1;
-						bbposes.mav_name = mav_name;
 						bbposes.object_poses.push_back(bbpose[0]);
 						pose_pub.publish(bbposes);
 						break;
