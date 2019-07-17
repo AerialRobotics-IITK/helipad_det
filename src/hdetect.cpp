@@ -20,7 +20,6 @@ class HelipadDetector{
 
 		int threshold;
 		double a, b, c, d, signature_tolerance, area_tolerance;
-		std::string mav_name;
 
 		bool publish_preprocess, publish_detected_helipad;
 
@@ -45,10 +44,9 @@ class HelipadDetector{
 			nh_private.getParam("distortion_coefficients/data", dist_coeff);
 			nh_private.getParam("publish_preprocess", publish_preprocess);
 			nh_private.getParam("publish_detected_helipad", publish_detected_helipad);
-			nh_private.getParam("mav_name", mav_name);
 
 			odom_sub = nh_public.subscribe("odom", 1, &HelipadDetector::odomCb, this);
-			image_sub = nh_public.subscribe("rectified_image", 1, &HelipadDetector::imageCb, this);
+			image_sub = nh_public.subscribe("image_raw", 1, &HelipadDetector::imageCb, this);
 
 			server = nh_private.advertiseService("terminate", &HelipadDetector::process, this);
 
@@ -112,7 +110,7 @@ class HelipadDetector{
 
 				processed_frame = preprocess(frame, threshold, cam_mat, dist_coeff);
 				if(publish_preprocess)
-				{	
+				{
 					cv_bridge::CvImage preprocessed_img;
 					preprocessed_img.encoding = sensor_msgs::image_encodings::MONO8;
 					preprocessed_img.header.stamp = ros::Time::now();
@@ -184,7 +182,7 @@ int main(int argc, char** argv)
 {
 	ros::init(argc, argv, "hdetect");
   	HelipadDetector hd;
-	ros::Rate rate(20);
+	ros::Rate rate(10);
 	while (ros::ok() && !(exit))
 	{
 		ros::spinOnce();
