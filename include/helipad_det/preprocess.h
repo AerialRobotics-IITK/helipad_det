@@ -18,7 +18,7 @@
 #define exit flag==-1
 #define run flag==1
 
-int flag = 1;
+int flag = 0; 
 
 double crossProduct(cv::Point, cv::Point, cv::Point);
 double baseLength(cv::Point, cv::Point);
