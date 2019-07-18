@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-        <arg name="mav_name" default="ironman"/>
+        <arg name="mav_name" default="magnus"/>
         <group ns="$(arg mav_name)">
-                <!-- <include file="$(find usb_cam)/launch/usb_cam-test.launch"/> -->
                 <node pkg="helipad_det" type="hdetect" name="hdetect" output="screen" required="true">
                         <rosparam file="$(find helipad_det)/cfg/params.yaml"/>
                         <!-- Subscribed Topics -->
                         <remap from="odom" to="pilot/local_position/odom"/>
                         <remap from="image_raw" to="mv/image_raw"/>
-
                         <!-- Published Topics -->
                         <remap from="detected_helipad" to="detected_helipad"/>
                         <remap from="preprocessed_image" to="preprocessed_image"/>
