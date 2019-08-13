@@ -22,6 +22,7 @@ class HelipadDetector{
 		double a, b, c, d, signature_tolerance, area_tolerance;
 
 		bool publish_preprocess, publish_detected_helipad;
+		bool helipad_detected, circle_detected;
 
 		nav_msgs::Odometry odom;
 
@@ -120,8 +121,13 @@ class HelipadDetector{
 
 				cv::findContours(processed_frame, list_contours, CV_RETR_LIST, CV_CHAIN_APPROX_NONE);
 				
+				std::vector<std::vector<cv::Point> > list_poly(list_contours.size());
+
 				cv::Point centre_;
 				geometry_msgs::Point point_h;
+
+				helipad_detected = false;
+				circle_detected = false;
 
 				mav_utils_msgs::BBPose bbpose[1];
 				mav_utils_msgs::BBPoses bbposes;			
@@ -145,18 +151,10 @@ class HelipadDetector{
 					
 					if(isSimilar(signature,list_contours.at(i), a, b, c, d, signature_tolerance)==1)
 					{
-						cv::drawContours(frame, list_contours, i, cv::Scalar(0, 0, 255), 2);
+						helipad_detected = true;
+						cv::drawContours(frame, list_contours, i, cv::Scalar(255, 0, 0), 2);
 						centre_ = centre(signature, list_contours.at(i), frame);
 						retrace(signature, list_contours.at(i), frame);
-						point_h = findPose(centre_, nh_private, odom);
-						bbpose[0].position = point_h;
-						bbpose[0].boxID = -1;
-						bbpose[0].type = -1;
-						bbpose[0].area = 0;
-						bbposes.stamp = ros::Time::now();
-						bbposes.imageID = -1;
-						bbposes.object_poses.push_back(bbpose[0]);
-						pose_pub.publish(bbposes);
 						break;
 					}
 					// else
@@ -164,7 +162,48 @@ class HelipadDetector{
 					// 	cv::drawContours(frame, list_contours, i, cv::Scalar(0, 255, 0));
 					// }
 				}
+
+				cv::Point sum_poly, mean_poly;
+
+				if(helipad_detected)//Check for circle only if helipad is detected
+				{
+					for(i=0;i<list_contours.size();i++)
+					{
+						cv::approxPolyDP(list_contours.at(i), list_poly.at(i), 0.001*list_contours.at(i).size(), true);
+						sum_poly = cv::Point(0, 0);
+						if(list_poly.at(i).size() > 30)
+						{
+							for(int j=0;j<list_poly.at(i).size();j++)
+								sum_poly += list_poly.at(i).at(j);
+							mean_poly = sum_poly*(1.0/list_poly.at(i).size());
+							if(cv::norm(centre_ - mean_poly) < 0.1*cv::norm(mean_poly - list_poly.at(i).at(0)))
+							{
+								circle_detected = true;
+								cv::circle(frame, mean_poly, 2, cv::Scalar(0, 0, 0), 2);
+								cv::drawContours(frame, list_contours, i, cv::Scalar(0, 0, 255));
+								std::cout << mean_poly << std::endl;
+								break;
+							}
+						}
+					}
+				}
 				
+				if(helipad_detected)
+				{
+					if(helipad_detected && circle_detected)
+						point_h = findPose(mean_poly, nh_private, odom);
+					else
+						point_h = findPose(centre_, nh_private, odom);
+					bbpose[0].position = point_h;
+					bbpose[0].boxID = -1;
+					bbpose[0].type = -1;
+					bbpose[0].area = 0;
+					bbposes.stamp = ros::Time::now();
+					bbposes.imageID = -1;
+					bbposes.object_poses.push_back(bbpose[0]);
+					pose_pub.publish(bbposes);
+				}
+
 				if (publish_detected_helipad)
 				{
 					cv_bridge::CvImage Detected_H;

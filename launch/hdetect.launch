@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-        <arg name="mav_name" default="magnus"/>
+        <arg name="mav_name" default="ironman"/>
         <group ns="$(arg mav_name)">
                 <node pkg="helipad_det" type="hdetect" name="hdetect" output="screen" required="true">
                         <rosparam file="$(find helipad_det)/cfg/params.yaml"/>
