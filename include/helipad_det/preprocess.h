@@ -21,7 +21,7 @@
 
 int flag = 0; 
 
-
+cv::Scalar circleDet(const std::vector<cv::Point>&);
 double crossProduct(cv::Point, cv::Point, cv::Point);
 double baseLength(cv::Point, cv::Point);
 void pointToLine(const std::vector<cv::Point>&, std::vector<double>&);

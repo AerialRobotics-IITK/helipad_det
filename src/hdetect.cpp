@@ -163,27 +163,21 @@ class HelipadDetector{
 					// }
 				}
 
-				cv::Point sum_poly, mean_poly;
+				// cv::Point sum_poly, mean_poly;
+				cv::Scalar circle;
 
 				if(helipad_detected)//Check for circle only if helipad is detected
 				{
 					for(i=0;i<list_contours.size();i++)
 					{
-						cv::approxPolyDP(list_contours.at(i), list_poly.at(i), 0.001*list_contours.at(i).size(), true);
-						sum_poly = cv::Point(0, 0);
-						if(list_poly.at(i).size() > 30)
+						circle = circleDet(list_contours.at(i));
+						if(cv::norm(centre_ - cv::Point(circle[0], circle[1])) < 0.05*circle[2])
 						{
-							for(int j=0;j<list_poly.at(i).size();j++)
-								sum_poly += list_poly.at(i).at(j);
-							mean_poly = sum_poly*(1.0/list_poly.at(i).size());
-							if(cv::norm(centre_ - mean_poly) < 0.1*cv::norm(mean_poly - list_poly.at(i).at(0)))
-							{
-								circle_detected = true;
-								cv::circle(frame, mean_poly, 2, cv::Scalar(0, 0, 0), 2);
-								cv::drawContours(frame, list_contours, i, cv::Scalar(0, 0, 255));
-								std::cout << mean_poly << std::endl;
-								break;
-							}
+							circle_detected = true;
+							cv::circle(frame, cv::Point(circle[0], circle[1]), 2, cv::Scalar(0, 0, 0), -1);
+							cv::drawContours(frame, list_contours, i, cv::Scalar(0, 0, 255), 5);
+							std::cout << circle << std::endl;
+							break;
 						}
 					}
 				}
@@ -191,7 +185,7 @@ class HelipadDetector{
 				if(helipad_detected)
 				{
 					if(helipad_detected && circle_detected)
-						point_h = findPose(mean_poly, nh_private, odom);
+						point_h = findPose(cv::Point(circle[0], circle[1]), nh_private, odom);
 					else
 						point_h = findPose(centre_, nh_private, odom);
 					bbpose[0].position = point_h;

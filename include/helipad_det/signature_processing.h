@@ -254,4 +254,25 @@ int loc(int i, int n)
     }   
 }
 
+cv::Scalar circleDet(const std::vector<cv::Point>& contour)
+{
+    int n = contour.size();
+    if(n<10)
+        return cv::Scalar(0, 0, 0);
+    cv::Point cen = 0.25*(contour.at(0) + contour.at(round(n/2))) + 0.25*(contour.at(round(n/4)) + contour.at(round(3*n/4)));
+    double avg_r2=0,avg_r=0;
+    for(int i=0;i<n;i++)
+    {
+        avg_r += cv::norm(contour.at(i) - cen);
+        avg_r2 += cv::norm(contour.at(i) - cen)*cv::norm(contour.at(i) - cen);
+    }
+    avg_r = avg_r/n;
+    avg_r2 = avg_r2/n;
+    double standard_deviation = std::sqrt(avg_r2 - avg_r*avg_r);
+    if(standard_deviation < 0.51*0.1*avg_r)
+        return cv::Scalar(cen.x, cen.y, avg_r);
+    else
+        return cv::Scalar(0, 0, 0);
+}
+
 #endif
