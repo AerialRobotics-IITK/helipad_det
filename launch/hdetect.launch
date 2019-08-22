@@ -6,7 +6,7 @@
                         <rosparam file="$(find helipad_det)/cfg/params.yaml"/>
                         <!-- Subscribed Topics -->
                         <remap from="odom" to="odom"/>
-                        <remap from="image_raw" to="mv/image_raw"/>
+                        <remap from="image_raw" to="/mv/image_raw"/>
                         <!-- Published Topics -->
                         <remap from="detected_helipad" to="detected_helipad"/>
                         <remap from="preprocessed_image" to="preprocessed_image"/>
