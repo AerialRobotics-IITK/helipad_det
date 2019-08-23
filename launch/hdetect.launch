@@ -11,6 +11,6 @@
                         <remap from="detected_helipad" to="detected_helipad"/>
                         <remap from="preprocessed_image" to="preprocessed_image"/>
                         <remap from="helipad_position" to="helipad_position"/>
-                </node>
+                </node>         
         </group>
 </launch>

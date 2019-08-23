@@ -144,7 +144,7 @@ class HelipadDetector{
 				{
 					for(int j=0;j<list_contours.size();j++)
 					{
-						if((fabs((circle[i][2]/circle[j][2])-r) < 0.05) && cv::norm(cv::Point(circle[i][0], circle[i][1]) - cv::Point(circle[j][0], circle[j][1])) < 30)
+						if((fabs((circle[i][2]/circle[j][2])-r) < 0.1) && cv::norm(cv::Point(circle[i][0], circle[i][1]) - cv::Point(circle[j][0], circle[j][1])) < 30)
 						{
 							circle_detected = true;
 							centre_ = 0.5*cv::Point(circle[i][0], circle[i][1]) + 0.5*cv::Point(circle[j][0], circle[j][1]);
@@ -202,18 +202,18 @@ class HelipadDetector{
 				// 	}
 				// }
 				
-				// if(circle_detected || helipad_detected)
-				// {
-				// 	point_h = findPose(centre_, nh_private, odom);
-				// 	bbpose[0].position = point_h;
-				// 	bbpose[0].boxID = -1;
-				// 	bbpose[0].type = -1;
-				// 	bbpose[0].area = 0;
-				// 	bbposes.stamp = ros::Time::now();
-				// 	bbposes.imageID = -1;
-				// 	bbposes.object_poses.push_back(bbpose[0]);
-				// 	pose_pub.publish(bbposes);
-				// }
+				if(circle_detected || helipad_detected)
+				{
+					point_h = findPose(centre_, nh_private, odom);
+					bbpose[0].position = point_h;
+					bbpose[0].boxID = -1;
+					bbpose[0].type = -1;
+					bbpose[0].area = 0;
+					bbposes.stamp = ros::Time::now();
+					bbposes.imageID = -1;
+					bbposes.object_poses.push_back(bbpose[0]);
+					pose_pub.publish(bbposes);
+				}
 
 				if (publish_detected_helipad)
 				{
