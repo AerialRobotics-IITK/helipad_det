@@ -31,7 +31,7 @@ void retrace(const std::vector<double>&, const std::vector<cv::Point>&, cv::Mat&
 cv::Point centre(const std::vector<double>&, const std::vector<cv::Point>&, cv::Mat&);
 int loc(int, int);
 
-cv::Mat preprocess(cv::Mat& img, int threshold, std::vector<double>& cam_mat,std::vector<double>& dist_coeff){
+cv::Mat preprocess(cv::Mat& img, int threshold, std::vector<double>& cam_mat,std::vector<double>& dist_coeff, bool is_undistort){
     ROS_ASSERT(img.empty()!=true);
     
     cv::Mat img_, gray, blur, result;
@@ -52,9 +52,12 @@ cv::Mat preprocess(cv::Mat& img, int threshold, std::vector<double>& cam_mat,std
     {
         dist_coeff_.at<double>(i) = dist_coeff[i];
     }
-
-    cv::undistort(img, img_, intrinsic, dist_coeff_);
-    img = img_.clone();
+    
+    if(!is_undistort)
+    { 
+        cv::undistort(img, img_, intrinsic, dist_coeff_);
+        img = img_.clone();
+    }
     cv::cvtColor(img,gray,CV_BGR2GRAY);
     cv::GaussianBlur(gray, blur, cv::Size(3, 3), 0, 0);
     // double time = (double) cv::getTickCount();

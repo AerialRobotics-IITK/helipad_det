@@ -22,7 +22,7 @@ class HelipadDetector{
 		int threshold;
 		double r, a, b, c, d, signature_tolerance, area_tolerance;
 
-		bool publish_preprocess, publish_detected_helipad;
+		bool publish_preprocess, publish_detected_helipad, is_undistort;
 		bool helipad_detected, circle_detected;
 
 		nav_msgs::Odometry odom;
@@ -47,6 +47,7 @@ class HelipadDetector{
 			nh_private.getParam("distortion_coefficients/data", dist_coeff);
 			nh_private.getParam("publish_preprocess", publish_preprocess);
 			nh_private.getParam("publish_detected_helipad", publish_detected_helipad);
+			nh_private.getParam("is_undistort", is_undistort);
 
 			odom_sub = nh_public.subscribe("odom", 1, &HelipadDetector::odomCb, this);
 			image_sub = nh_public.subscribe("image_raw", 1, &HelipadDetector::imageCb, this);
@@ -111,7 +112,7 @@ class HelipadDetector{
 				std::vector<double> distances;
 				std::vector<double> signature;
 
-				processed_frame = preprocess(frame, threshold, cam_mat, dist_coeff);
+				processed_frame = preprocess(frame, threshold, cam_mat, dist_coeff, is_undistort);
 				if(publish_preprocess)
 				{
 					cv_bridge::CvImage preprocessed_img;

@@ -9,7 +9,7 @@ int main(int argc, char** argv)
 
     double a,b,c,d,signature_tolerance, area_tolerance;
     int canny_lowThres, ratio, kernel_size, i;
-
+    bool is_undistort;
     std::vector<double> cam_mat;
     std::vector<double> dist_coeff;
 
@@ -28,7 +28,7 @@ int main(int argc, char** argv)
     cv::Mat img = cv::imread("/home/tanay/catkin_ws/src/helipad_det/etc/helipad_final.jpg");
     ROS_ASSERT(img.empty()!=true);
 
-    cv::Mat prepro_img = preprocess(img, 20, cam_mat, dist_coeff);
+    cv::Mat prepro_img = preprocess(img, 20, cam_mat, dist_coeff, is_undistort);
     cv::imshow("Preprocessed Image", prepro_img);
     cv::waitKey(0);
     cv::destroyAllWindows();

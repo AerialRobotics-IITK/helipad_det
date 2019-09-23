@@ -4,6 +4,7 @@
         <group ns="$(arg mav_name)">
                 <node pkg="helipad_det" type="hdetect" name="hdetect" output="screen" required="true">
                         <rosparam file="$(find helipad_det)/cfg/params.yaml"/>
+                        <rosparam file="$(find mav_utils)/cfg/cam/ocam_640x480.yaml"/>
                         <!-- Subscribed Topics -->
                         <remap from="odom" to="odom"/>
                         <remap from="image_raw" to="/mv/image_raw"/>

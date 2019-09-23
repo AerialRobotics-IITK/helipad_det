@@ -12,33 +12,34 @@ area_tolerance : 0.0005
 
 publish_preprocess : true
 publish_detected_helipad : true
+is_undistort : true
 
-mav_name : ironman
+# mav_name : ironman
 
-image_width: 752
-image_height: 480
-camera_name: head_camera
-camera_matrix:
-  rows: 3
-  cols: 3
-  data: [414.1573058656413, 0, 379.5051916771028, 0, 413.8961901608803, 260.064272132189, 0, 0, 1]
-distortion_model: plumb_bob
-distortion_coefficients:
-  rows: 1
-  cols: 5
-  data: [-0.2667497715010867, 0.05824595745054147, 0.001097211085107507, -0.001283170962460823, 0]
-rectification_matrix:
-  rows: 3
-  cols: 3
-  data: [1, 0, 0, 0, 1, 0, 0, 0, 1]
-projection_matrix:
-  rows: 3
-  cols: 4
-  data: [300.63134765625, 0, 377.7457987137605, 0, 0, 370.5363464355469, 265.8181864458038, 0, 0, 0, 1, 0]
+# image_width: 752
+# image_height: 480
+# camera_name: head_camera
+# camera_matrix:
+#   rows: 3
+#   cols: 3
+#   data: [414.1573058656413, 0, 379.5051916771028, 0, 413.8961901608803, 260.064272132189, 0, 0, 1]
+# distortion_model: plumb_bob
+# distortion_coefficients:
+#   rows: 1
+#   cols: 5
+#   data: [-0.2667497715010867, 0.05824595745054147, 0.001097211085107507, -0.001283170962460823, 0]
+# rectification_matrix:
+#   rows: 3
+#   cols: 3
+#   data: [1, 0, 0, 0, 1, 0, 0, 0, 1]
+# projection_matrix:
+#   rows: 3
+#   cols: 4
+#   data: [300.63134765625, 0, 377.7457987137605, 0, 0, 370.5363464355469, 265.8181864458038, 0, 0, 0, 1, 0]
 
-camera : 
-  translation : [0, 0, 0]
-  rotation : [0, -1, 0, -1, 0, 0, 0, 0, -1]
+# camera : 
+#   translation : [0, 0, 0]
+#   rotation : [0, -1, 0, -1, 0, 0, 0, 0, -1]
 
 # image_width: 640
 # image_height: 480
