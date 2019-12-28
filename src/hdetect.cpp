@@ -136,15 +136,13 @@ class HelipadDetector{
 				mav_utils_msgs::BBPose bbpose[1];
 				mav_utils_msgs::BBPoses bbposes;			
 
-				std::unordered_set<double> s;
-
 				for(i=0;i<list_contours.size();i++)
-					circle[i] = circleDet(list_contours.at(i));
+					circle[i] = circleDet(list_contours.at(i)); //In each element of circle, a cv::Scalar object of the form (x,y,radius)
 
 				for(i=0;i<list_contours.size();i++)
 				{
 					for(int j=0;j<list_contours.size();j++)
-					{
+					{	// Checking for ratio of radii and distance between centres of the circles(to ensure concentricity)
 						if((fabs((circle[i][2]/circle[j][2])-r) < 0.1) && cv::norm(cv::Point(circle[i][0], circle[i][1]) - cv::Point(circle[j][0], circle[j][1])) < 30)
 						{
 							circle_detected = true;
@@ -157,21 +155,18 @@ class HelipadDetector{
 				}
 				
 				if(!circle_detected)
-				{
-					for(i=0;i<list_contours.size();i++)//H detector
+				{	//'H' is to be detected
+					for(i=0;i<list_contours.size();i++)
 					{
-						if(cv::contourArea(list_contours.at(i)) < area_tolerance*frame.size().area())
+						if(cv::contourArea(list_contours.at(i)) < area_tolerance*frame.size().area()) // Size check
 								continue;
 						
-						int n = floor(b*list_contours.at(i).size()/2.7);
+						int n = floor(b*list_contours.at(i).size()/2.7); //Precalculated factor of 2.7
 
 						distances.clear();
 						signature.clear();
 										
 						pointToLineDistance(list_contours.at(i), distances, n);
-
-						// for(int j=0;j<distances.size();j++)
-						// 	distances.at(j) = (cv::norm( list_contours.at(i).at( loc(j+n, distances.size()) )+list_contours.at(i).at( loc(j-n, distances.size()) )-2*list_contours.at(i).at( loc(j, distances.size()) ) ));
 
 						smooth(distances, signature, n);
 						
@@ -183,25 +178,8 @@ class HelipadDetector{
 							retrace(signature, list_contours.at(i), frame);
 							break;
 						}
-						// else
-						// {
-						// 	cv::drawContours(frame, list_contours, i, cv::Scalar(0, 255, 0));
-						// }
 					}
 				}
-
-				// for(i=0;i<list_contours.size();i++)
-				// {
-				// 	circle = circleDet(list_contours.at(i));
-				// 	if(cv::norm(centre_ - cv::Point(circle[0], circle[1])) < 0.05*circle[2])
-				// 	{
-				// 		circle_detected = true;
-				// 		cv::circle(frame, cv::Point(circle[0], circle[1]), 2, cv::Scalar(0, 0, 0), -1);
-				// 		cv::drawContours(frame, list_contours, i, cv::Scalar(0, 0, 255), 5);
-				// 		std::cout << circle << std::endl;
-				// 		break;
-				// 	}
-				// }
 				
 				if(circle_detected || helipad_detected)
 				{

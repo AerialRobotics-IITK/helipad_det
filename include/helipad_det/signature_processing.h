@@ -22,7 +22,7 @@ void pointToLineDistance(const std::vector<cv::Point>& contour, std::vector<doub
 
 void smooth(const std::vector<double>& distances, std::vector<double>& signature, double n){
     int i, size=distances.size();
-    // double time = (double) cv::getTickCount();
+
     for(i=0;i<size;i++)
         signature.push_back(0);
 
@@ -147,14 +147,16 @@ void smooth(const std::vector<double>& distances, std::vector<double>& signature
             signature.at(x0)=y0;
         }
     }
-    // std::cout << "TIME TAKEN=" << ((double)cv::getTickCount()-time)/cv::getTickFrequency() << std::endl;
+
 }
 
 void smoother(const std::vector<double>& input, std::vector<double>& output){
     ROS_ASSERT(input.size()==output.size());
     int i, step=round(input.size()/(26*6));
+
     for(i=0;i<output.size();i++)
         output[i]=0;
+        
     std::vector<double> Derivative;
     Derivative.push_back((input.at(1)-input.at(input.size()-1))/2);
     for(i=1;i<input.size()-1;i++)

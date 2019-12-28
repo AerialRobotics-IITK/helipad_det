@@ -60,11 +60,8 @@ cv::Mat preprocess(cv::Mat& img, int threshold, std::vector<double>& cam_mat,std
     }
     cv::cvtColor(img,gray,CV_BGR2GRAY);
     cv::GaussianBlur(gray, blur, cv::Size(3, 3), 0, 0);
-    // double time = (double) cv::getTickCount();
     //cv::threshold(blur, result, threshold, 255, CV_THRESH_BINARY);
     cv::adaptiveThreshold(blur, result, 255, CV_ADAPTIVE_THRESH_GAUSSIAN_C, CV_THRESH_BINARY, 41, 5);
-    // std::cout << "TIME TAKEN THRESHOLD=" << ((double)cv::getTickCount()-time)/cv::getTickFrequency() << std::endl;
-
     cv::Mat Element = getStructuringElement (cv::MORPH_RECT,cv::Size(3,3));
     cv::morphologyEx(result, result, CV_MOP_OPEN, Element);
 
