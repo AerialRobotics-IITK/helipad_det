@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<launch>
-    <node pkg="helipad_det" type="test1" name="test1" output="screen" required="true">
-        <rosparam file="$(find helipad_det)/cfg/params.yaml"/>
-    </node>
-</launch>
