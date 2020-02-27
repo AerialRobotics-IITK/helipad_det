@@ -33,7 +33,7 @@ catkin init
 Clone the repository into the source folder.
 ```shell
 cd ~/catkin_ws/src
-git clone https://github.com/amartyadash/helipad_det.git
+git clone https://github.com/AerialRobotics-IITK/helipad_det.git
 ```
 Build using either (preferably) `catkin build helipad_det` or `catkin_make` after ensuring all dependencies are met.  
 ## Nodes
