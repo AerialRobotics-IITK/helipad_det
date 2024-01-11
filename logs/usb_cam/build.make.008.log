@@ -1,0 +1,3 @@
+[ 50%] Built target v4l_driver
+[ 75%] Built target usb_cam
+[100%] Built target usb_cam_node

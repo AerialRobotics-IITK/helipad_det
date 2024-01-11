@@ -1,0 +1,1 @@
+/home/shubh/catkin_ws/devel/.private/mav_utils_msgs/share/mav_utils_msgs/cmake/mav_utils_msgs-msg-extras.cmake

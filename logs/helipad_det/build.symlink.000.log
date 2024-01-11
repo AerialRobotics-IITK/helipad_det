@@ -1,0 +1,4 @@
+Symlinking /home/shubh/catkin_ws/devel/share/helipad_det/cmake/helipad_detConfig.cmake
+Symlinking /home/shubh/catkin_ws/devel/share/helipad_det/cmake/helipad_detConfig-version.cmake
+Symlinking /home/shubh/catkin_ws/devel/lib/pkgconfig/helipad_det.pc
+Symlinking /home/shubh/catkin_ws/devel/lib/helipad_det/hdetect

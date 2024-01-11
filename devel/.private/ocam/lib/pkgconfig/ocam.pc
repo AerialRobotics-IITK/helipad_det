@@ -1,0 +1,8 @@
+prefix=/home/shubh/catkin_ws/devel/.private/ocam
+
+Name: ocam
+Description: Description of ocam
+Version: 0.0.1
+Cflags: -I/home/shubh/catkin_ws/devel/.private/ocam/include -I/home/shubh/catkin_ws/src/ocam/include
+Libs: -L${prefix}/lib 
+Requires: roscpp std_msgs cv_bridge image_transport camera_info_manager sensor_msgs dynamic_reconfigure

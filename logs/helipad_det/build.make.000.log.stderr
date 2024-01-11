@@ -1,0 +1,42 @@
+/home/shubh/catkin_ws/src/helipad_det/src/hdetect.cpp: In member function ‘void HelipadDetector::imageCb(const ImageConstPtr&)’:
+/home/shubh/catkin_ws/src/helipad_det/src/hdetect.cpp:159:20: error: ‘Vec4i’ was not declared in this scope; did you mean ‘cv::Vec4i’?
+  159 |        std::vector<Vec4i> hierarchy;
+      |                    ^~~~~
+      |                    cv::Vec4i
+In file included from /usr/include/opencv4/opencv2/core.hpp:57,
+                 from /usr/include/opencv4/opencv2/opencv.hpp:52,
+                 from /home/shubh/catkin_ws/src/helipad_det/include/helipad_det/preprocess.h:5,
+                 from /home/shubh/catkin_ws/src/helipad_det/src/hdetect.cpp:1:
+/usr/include/opencv4/opencv2/core/matx.hpp:414:21: note: ‘cv::Vec4i’ declared here
+  414 | typedef Vec<int, 4> Vec4i;
+      |                     ^~~~~
+/home/shubh/catkin_ws/src/helipad_det/src/hdetect.cpp:159:25: error: template argument 1 is invalid
+  159 |        std::vector<Vec4i> hierarchy;
+      |                         ^
+/home/shubh/catkin_ws/src/helipad_det/src/hdetect.cpp:159:25: error: template argument 2 is invalid
+/home/shubh/catkin_ws/src/helipad_det/src/hdetect.cpp:160:96: error: no matching function for call to ‘findContours(cv::Mat&, std::vector<std::vector<cv::Point_<int> > >&, int&, cv::RetrievalModes, cv::ContourApproximationModes)’
+  160 |     cv::findContours(frame, list_contours, hierarchy, cv::RETR_FLOODFILL, cv::CHAIN_APPROX_NONE);
+      |                                                                                                ^
+In file included from /usr/include/opencv4/opencv2/opencv.hpp:74,
+                 from /home/shubh/catkin_ws/src/helipad_det/include/helipad_det/preprocess.h:5,
+                 from /home/shubh/catkin_ws/src/helipad_det/src/hdetect.cpp:1:
+/usr/include/opencv4/opencv2/imgproc.hpp:3798:19: note: candidate: ‘void cv::findContours(cv::InputArray, cv::OutputArrayOfArrays, cv::OutputArray, int, int, cv::Point)’
+ 3798 | CV_EXPORTS_W void findContours( InputArray image, OutputArrayOfArrays contours,
+      |                   ^~~~~~~~~~~~
+/usr/include/opencv4/opencv2/imgproc.hpp:3799:43: note:   no known conversion for argument 3 from ‘int’ to ‘cv::OutputArray’ {aka ‘const cv::_OutputArray&’}
+ 3799 |                               OutputArray hierarchy, int mode,
+      |                               ~~~~~~~~~~~~^~~~~~~~~
+/usr/include/opencv4/opencv2/imgproc.hpp:3803:17: note: candidate: ‘void cv::findContours(cv::InputArray, cv::OutputArrayOfArrays, int, int, cv::Point)’
+ 3803 | CV_EXPORTS void findContours( InputArray image, OutputArrayOfArrays contours,
+      |                 ^~~~~~~~~~~~
+/usr/include/opencv4/opencv2/imgproc.hpp:3804:59: note:   no known conversion for argument 5 from ‘cv::ContourApproximationModes’ to ‘cv::Point’ {aka ‘cv::Point_<int>’}
+ 3804 |                               int mode, int method, Point offset = Point());
+      |                                                     ~~~~~~^~~~~~~~~~~~~~~~
+In file included from /home/shubh/catkin_ws/src/helipad_det/src/hdetect.cpp:2:
+/home/shubh/catkin_ws/src/helipad_det/include/helipad_det/signature_processing.h: In function ‘int loc(int, int)’:
+/home/shubh/catkin_ws/src/helipad_det/include/helipad_det/signature_processing.h:257:1: warning: control reaches end of non-void function [-Wreturn-type]
+  257 | }
+      | ^
+make[2]: *** [CMakeFiles/hdetect.dir/build.make:76: CMakeFiles/hdetect.dir/src/hdetect.cpp.o] Error 1
+make[1]: *** [CMakeFiles/Makefile2:2561: CMakeFiles/hdetect.dir/all] Error 2
+make: *** [Makefile:146: all] Error 2

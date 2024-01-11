@@ -1,0 +1,6 @@
+catkin_simple
+/home/shubh/catkin_ws/devel/.private/catkin_simple/cmake.lock /home/shubh/catkin_ws/devel/./cmake.lock
+/home/shubh/catkin_ws/devel/.private/catkin_simple/share/catkin_simple/cmake/catkin_simple-extras.cmake /home/shubh/catkin_ws/devel/share/catkin_simple/cmake/catkin_simple-extras.cmake
+/home/shubh/catkin_ws/devel/.private/catkin_simple/share/catkin_simple/cmake/catkin_simpleConfig.cmake /home/shubh/catkin_ws/devel/share/catkin_simple/cmake/catkin_simpleConfig.cmake
+/home/shubh/catkin_ws/devel/.private/catkin_simple/share/catkin_simple/cmake/catkin_simpleConfig-version.cmake /home/shubh/catkin_ws/devel/share/catkin_simple/cmake/catkin_simpleConfig-version.cmake
+/home/shubh/catkin_ws/devel/.private/catkin_simple/lib/pkgconfig/catkin_simple.pc /home/shubh/catkin_ws/devel/lib/pkgconfig/catkin_simple.pc

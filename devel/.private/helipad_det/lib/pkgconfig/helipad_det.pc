@@ -1,0 +1,8 @@
+prefix=/home/shubh/catkin_ws/devel/.private/helipad_det
+
+Name: helipad_det
+Description: Description of helipad_det
+Version: 0.0.0
+Cflags: -I/home/shubh/catkin_ws/src/helipad_det/include
+Libs: -L${prefix}/lib 
+Requires: cmake_modules roscpp cv_bridge image_transport sensor_msgs std_msgs nav_msgs geometry_msgs message_generation eigen_conversions tf tf_conversions mav_utils_msgs

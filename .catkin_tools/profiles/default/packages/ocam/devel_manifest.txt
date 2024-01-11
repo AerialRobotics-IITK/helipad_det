@@ -1,0 +1,13 @@
+ocam
+/home/shubh/catkin_ws/devel/.private/ocam/cmake.lock /home/shubh/catkin_ws/devel/./cmake.lock
+/home/shubh/catkin_ws/devel/.private/ocam/share/ocam/docs/camConfig.wikidoc /home/shubh/catkin_ws/devel/share/ocam/docs/camConfig.wikidoc
+/home/shubh/catkin_ws/devel/.private/ocam/share/ocam/docs/camConfig.dox /home/shubh/catkin_ws/devel/share/ocam/docs/camConfig.dox
+/home/shubh/catkin_ws/devel/.private/ocam/share/ocam/docs/camConfig-usage.dox /home/shubh/catkin_ws/devel/share/ocam/docs/camConfig-usage.dox
+/home/shubh/catkin_ws/devel/.private/ocam/share/ocam/cmake/ocamConfig.cmake /home/shubh/catkin_ws/devel/share/ocam/cmake/ocamConfig.cmake
+/home/shubh/catkin_ws/devel/.private/ocam/share/ocam/cmake/ocamConfig-version.cmake /home/shubh/catkin_ws/devel/share/ocam/cmake/ocamConfig-version.cmake
+/home/shubh/catkin_ws/devel/.private/ocam/include/ocam/camConfig.h /home/shubh/catkin_ws/devel/include/ocam/camConfig.h
+/home/shubh/catkin_ws/devel/.private/ocam/lib/pkgconfig/ocam.pc /home/shubh/catkin_ws/devel/lib/pkgconfig/ocam.pc
+/home/shubh/catkin_ws/devel/.private/ocam/lib/ocam/ocam /home/shubh/catkin_ws/devel/lib/ocam/ocam
+/home/shubh/catkin_ws/devel/.private/ocam/lib/python3/dist-packages/ocam/__init__.py /home/shubh/catkin_ws/devel/lib/python3/dist-packages/ocam/__init__.py
+/home/shubh/catkin_ws/devel/.private/ocam/lib/python3/dist-packages/ocam/cfg/__init__.py /home/shubh/catkin_ws/devel/lib/python3/dist-packages/ocam/cfg/__init__.py
+/home/shubh/catkin_ws/devel/.private/ocam/lib/python3/dist-packages/ocam/cfg/camConfig.py /home/shubh/catkin_ws/devel/lib/python3/dist-packages/ocam/cfg/camConfig.py

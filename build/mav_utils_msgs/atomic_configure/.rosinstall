@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/shubh/catkin_ws/devel/.private/mav_utils_msgs/setup.sh

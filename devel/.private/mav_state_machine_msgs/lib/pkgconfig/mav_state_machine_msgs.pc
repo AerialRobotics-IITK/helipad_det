@@ -1,0 +1,8 @@
+prefix=/home/shubh/catkin_ws/devel/.private/mav_state_machine_msgs
+
+Name: mav_state_machine_msgs
+Description: Description of mav_state_machine_msgs
+Version: 0.0.0
+Cflags: -I/home/shubh/catkin_ws/devel/.private/mav_state_machine_msgs/include
+Libs: -L${prefix}/lib 
+Requires: message_runtime

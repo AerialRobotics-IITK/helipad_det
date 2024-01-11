@@ -1,0 +1,11 @@
+\subsubsection parameters ROS parameters
+
+Reads and maintains the following parameters on the ROS server
+
+- \b "~exposure" : \b [int] Exposure arameter min: 1, default: 100, max: 625
+- \b "~gain" : \b [int] Gain parameter min: 0, default: 32, max: 255
+- \b "~wb_blue" : \b [int] Whitebalance Blue parameter min: 0, default: 200, max: 250
+- \b "~wb_red" : \b [int] Whitebalance Red parameter min: 0, default: 150, max: 250
+- \b "~auto_exposure" : \b [bool] Auto-Exposure parameter min: False, default: True, max: True
+- \b "~undistort" : \b [bool] Apply undistort? min: False, default: True, max: True
+

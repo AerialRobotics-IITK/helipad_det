@@ -1,0 +1,1 @@
+/home/shubh/catkin_ws/devel/.private/helipad_det/lib/pkgconfig/helipad_det.pc

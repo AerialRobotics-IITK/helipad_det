@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/shubh/catkin_ws/devel/.private/ocam/setup.sh

@@ -1,0 +1,15 @@
+/home/shubh/catkin_ws/src/helipad_det/src/hdetect.cpp: In member function ‘void HelipadDetector::imageCb(const ImageConstPtr&)’:
+/home/shubh/catkin_ws/src/helipad_det/src/hdetect.cpp:163:24: error: ‘class cv::Mat’ has no member named ‘width’
+  163 |     std::cout << frame.width << " " << frame.height << std::endl;
+      |                        ^~~~~
+/home/shubh/catkin_ws/src/helipad_det/src/hdetect.cpp:163:46: error: ‘class cv::Mat’ has no member named ‘height’
+  163 |     std::cout << frame.width << " " << frame.height << std::endl;
+      |                                              ^~~~~~
+In file included from /home/shubh/catkin_ws/src/helipad_det/src/hdetect.cpp:2:
+/home/shubh/catkin_ws/src/helipad_det/include/helipad_det/signature_processing.h: In function ‘int loc(int, int)’:
+/home/shubh/catkin_ws/src/helipad_det/include/helipad_det/signature_processing.h:257:1: warning: control reaches end of non-void function [-Wreturn-type]
+  257 | }
+      | ^
+make[2]: *** [CMakeFiles/hdetect.dir/build.make:76: CMakeFiles/hdetect.dir/src/hdetect.cpp.o] Error 1
+make[1]: *** [CMakeFiles/Makefile2:2561: CMakeFiles/hdetect.dir/all] Error 2
+make: *** [Makefile:146: all] Error 2
