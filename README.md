@@ -4,6 +4,7 @@ The aim of this ROS package is to provide detection and pose estimation of an H-
 This package has the following dependencies:
 - [OpenCV](https://opencv.org/) (3.0 or higher)
 - [Eigen](http://eigen.tuxfamily.org/index.php?title=Main_Page)
+- [GeographicLib](https://sourceforge.net/projects/geographiclib/)
 - [img_proc](https://github.com/tanaysaha/img_proc)
 - ROS Kinetic (stable, tested) with the following packages:
 
@@ -42,7 +43,7 @@ Build using either (preferably) `catkin build helipad_det` or `catkin_make` afte
 Topics can be remapped to suit your use case using the `remap` tags in the `hdetect.launch` file.
 ### hdetect node
 + Subscribed
-  - /mv/image_raw
+  - /image_raw
   - /Odometry
 + Published
   - /helipad_position
