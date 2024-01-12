@@ -7,7 +7,7 @@
                         <rosparam file="$(find mav_utils)/cfg/cam/ocam_640x480.yaml"/>
                         <!-- Subscribed Topics -->
                         <remap from="odom" to="odom"/>
-                        <remap from="image_raw" to="/mv/image_raw"/>
+                        <remap from="image_raw" to="/camera/color/image_raw"/>
                         <!-- Published Topics -->
                         <remap from="detected_helipad" to="detected_helipad"/>
                         <remap from="preprocessed_image" to="preprocessed_image"/>

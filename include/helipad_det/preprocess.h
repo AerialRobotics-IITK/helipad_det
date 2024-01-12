@@ -3,6 +3,7 @@
 
 #include <ros/ros.h>
 #include <opencv2/opencv.hpp>
+#include "opencv2/imgproc/imgproc_c.h" //opencv3 deprecated C macros and img formats, included for opencv4 compat
 #include <cv_bridge/cv_bridge.h>
 #include <sensor_msgs/Image.h>
 #include <sensor_msgs/image_encodings.h>
@@ -19,7 +20,7 @@
 #define run flag==1
 
 
-int flag = 0; 
+int flag = 1; // set true if running the code
 
 cv::Scalar circleDet(const std::vector<cv::Point>&);
 double crossProduct(cv::Point, cv::Point, cv::Point);

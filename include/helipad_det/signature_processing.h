@@ -213,7 +213,14 @@ void graph(const std::vector<double>& signature, cv::String str){
         if((size-(0.7/max)*size*signature.at(i))>0)
             cv::line(plt, cv::Point2d(0.1*size-0.01*size, (size-(0.7/max)*size*i)), cv::Point2d(0.1*size+0.01*size, (size-(0.7/max)*size*i)), cv::Scalar(255, 0, 0));
     }
-    cv::namedWindow(str, CV_WINDOW_FREERATIO);
+    
+    #if (CV_VERSION_MAJOR >= 4)
+        cv::namedWindow(str, cv::WINDOW_AUTOSIZE); 
+    #else
+        cv::namedWindow(str, CV_WINDOW_FREERATIO);
+
+    #endif
+
     cv::imshow(str, plt);
     cv::waitKey(0);
     cv::destroyAllWindows();
